@@ -1,0 +1,110 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Organization {
+  id             String   @id @default(cuid())
+  name           String
+  aliases        Json     // array of strings (SQLite-safe)
+  rollingSummary String?
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+  deals          Deal[]
+  contacts       Contact[]
+}
+
+model Contact {
+  id              String   @id @default(cuid())
+  displayName     String
+  aliases         Json     // array of strings
+  email           String?
+  telegramHandle  String?
+  xHandle         String?
+  notes           String?
+  rollingSummary  String?
+  organizationId  String?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  organization    Organization? @relation(fields: [organizationId], references: [id])
+  dealContacts    DealContact[]
+}
+
+model Deal {
+  id             String   @id @default(cuid())
+  name           String
+  aliases        Json     // array of strings (SQLite-safe)
+  stage          String   @default("qualified") // qualified, mou_signed, integration, won, lost_on_hold
+  productTags    Json     @default("[]") // array of strings (KYA, AI, PoU)
+  lastDecision   String?
+  nextStep       String?
+  rollingSummary String?
+  organizationId String?
+  // Milestone dates
+  mouSignedAt              DateTime?
+  integrationCompletedAt   DateTime?
+  coMarketingCompletedAt   DateTime?
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+  organization   Organization? @relation(fields: [organizationId], references: [id])
+  items          Item[]
+  dealContacts   DealContact[]
+}
+
+model DealContact {
+  id        String   @id @default(cuid())
+  dealId    String
+  contactId String
+  role      String?
+  createdAt DateTime @default(now())
+  deal      Deal     @relation(fields: [dealId], references: [id], onDelete: Cascade)
+  contact   Contact  @relation(fields: [contactId], references: [id], onDelete: Cascade)
+
+  @@unique([dealId, contactId])
+}
+
+model Item {
+  id          String   @id @default(cuid())
+  rawText     String
+  sourceType  String
+  dealId      String?
+  status      String
+  reason      String?
+  createdAt   DateTime @default(now())
+  deal        Deal?    @relation(fields: [dealId], references: [id])
+  proposal    Proposal?
+  decisionLogs DecisionLog[]
+}
+
+model Proposal {
+  id            String   @id @default(cuid())
+  itemId        String   @unique
+  candidatesJson Json
+  proposedJson  Json
+  createdAt     DateTime @default(now())
+  item          Item     @relation(fields: [itemId], references: [id], onDelete: Cascade)
+}
+
+model DecisionLog {
+  id     String   @id @default(cuid())
+  itemId String
+  action String
+  payload Json
+  ts     DateTime
+  item   Item     @relation(fields: [itemId], references: [id], onDelete: Cascade)
+}
+
+// Learning system: stores user corrections to improve future AI classification
+model ProductTagFeedback {
+  id              String   @id @default(cuid())
+  rawTextSnippet  String   // Key phrases from the input text for similarity matching
+  aiSuggestedTags Json     // Tags AI originally suggested (array of strings)
+  userFinalTags   Json     // Tags user actually selected (array of strings)
+  dealId          String?  // Associated deal for context
+  organizationId  String?  // Associated organization for context
+  createdAt       DateTime @default(now())
+}

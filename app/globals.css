@@ -1,0 +1,112 @@
+@import "tailwindcss";
+
+:root {
+  /* Primary Colors - from Billions brand assets */
+  --primary-blue: #0046FF;  /* Billions primary blue */
+  --primary-black: #000000;  /* Billions primary black */
+  --primary-white: #FFFFFF;  /* Billions primary white */
+  
+  /* Secondary Colors - from Billions brand assets */
+  --secondary-cyan: #00F0E0;  /* Cyan */
+  --secondary-light-blue: #00A9FF;  /* Light blue */
+  --secondary-light-green: #C3FF3C;  /* Light green */
+  --secondary-green: #40AD3D;  /* Green */
+  --secondary-pink: #FF5B8B;  /* Pink */
+  --secondary-red: #DC4F1F;  /* Red */
+  
+  /* Functional mappings */
+  --primary: var(--primary-blue);  /* Primary action color */
+  --primary-light: #3369FF;  /* Lighter shade of primary blue for hover */
+  --accent: var(--secondary-light-blue);  /* Accent color */
+  --accent-light: var(--secondary-cyan);  /* Lighter accent for hover states */
+  --text-primary: var(--primary-black);  /* Primary text */
+  --text-secondary: #555555;  /* Secondary text color */
+  --background: var(--primary-white);  /* White background */
+  --background-alt: #F8F9FC;  /* Slightly blue-tinted background */
+  --border: #E0E5FF;  /* Border color with slight blue tint */
+}
+
+/* Base styling */
+body {
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  color: var(--text-primary);
+  background-color: var(--background-alt);
+  font-size: 16px; /* Increased base font size */
+  line-height: 1.6;
+}
+
+/* Custom button styling */
+.btn-primary {
+  background-color: var(--primary-blue);
+  color: white;
+  border-radius: 0.625rem;
+  padding: 0.625rem 1.25rem; /* Increased padding */
+  font-weight: 600;
+  font-size: 1rem;
+  transition: background-color 0.2s;
+}
+
+.btn-primary:hover {
+  background-color: var(--primary-light);
+}
+
+.btn-secondary {
+  background-color: white;
+  color: var(--primary-blue);
+  border: 1px solid var(--border);
+  border-radius: 0.625rem;
+  padding: 0.625rem 1.25rem; /* Increased padding */
+  font-weight: 600;
+  font-size: 1rem;
+  transition: all 0.2s;
+}
+
+.btn-secondary:hover {
+  border-color: var(--primary-blue);
+  background-color: var(--background-alt);
+}
+
+/* Custom card styling */
+.card {
+  background-color: var(--background);
+  border: 1px solid var(--border);
+  border-radius: 0.75rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.card-accent {
+  border-left: 3px solid var(--primary-blue);
+}
+
+/* Active navigation item */
+.nav-active {
+  background-color: var(--primary-blue);
+  color: var(--primary-white);
+  border: none;
+  box-shadow: 0 2px 4px rgba(0, 70, 255, 0.2);
+}
+
+/* Secondary colors utility classes */
+.bg-cyan {
+  background-color: var(--secondary-cyan);
+}
+
+.bg-light-blue {
+  background-color: var(--secondary-light-blue);
+}
+
+.bg-light-green {
+  background-color: var(--secondary-light-green);
+}
+
+.bg-green {
+  background-color: var(--secondary-green);
+}
+
+.bg-pink {
+  background-color: var(--secondary-pink);
+}
+
+.bg-red {
+  background-color: var(--secondary-red);
+}
