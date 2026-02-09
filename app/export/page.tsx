@@ -8,8 +8,6 @@ import {
   AlertCircle, 
   CheckCircle2, 
   ShieldCheck,
-  ChevronDown,
-  ArrowRight
 } from 'lucide-react'
 
 type ExportFormat = 'json' | 'markdown'
@@ -56,22 +54,22 @@ export default function ExportPage() {
   ]
 
   return (
-    <div className="flex flex-col h-full bg-[#F8F9F8]">
+    <div className="flex flex-col h-full space-y-8">
       {/* Header */}
-      <div className="bg-white border-b border-gray-100 px-8 py-6">
-        <div className="flex items-center gap-2 text-sm font-bold text-gray-400 uppercase tracking-widest mb-2">
+      <div className="space-y-1">
+        <div className="flex items-center gap-2 text-[10px] font-black text-gray-400 uppercase tracking-widest">
           <span>Settings</span>
           <span>/</span>
           <span className="text-gray-900">Export</span>
         </div>
-        <h1 className="text-3xl font-black text-gray-900">Data Portability</h1>
-        <p className="text-gray-500 mt-1 font-medium">Export your CRM data anytime in structured formats.</p>
+        <h1 className="text-3xl font-black text-gray-900 tracking-tight">Data Portability</h1>
+        <p className="text-xs font-medium text-gray-400 uppercase tracking-widest">Export your CRM data anytime in structured formats.</p>
       </div>
 
-      <div className="flex-1 overflow-auto p-8">
-        <div className="max-w-4xl mx-auto space-y-8">
+      <div className="flex-1 min-h-0">
+        <div className="space-y-8">
           {/* Main Export Card */}
-          <div className="bg-white rounded-[32px] border border-gray-100 shadow-sm overflow-hidden">
+          <div className="sleek-card">
             <div className="p-10">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
                 <div>
@@ -152,7 +150,7 @@ export default function ExportPage() {
           </div>
 
           {/* Security Note */}
-          <div className="flex items-center gap-4 px-10 py-6 bg-white rounded-[24px] border border-gray-100 shadow-sm">
+          <div className="sleek-card rounded-[24px] flex items-center gap-4 px-10 py-6">
             <div className="p-2 bg-green-50 text-green-600 rounded-lg">
               <ShieldCheck size={20} />
             </div>

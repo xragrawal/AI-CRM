@@ -9,8 +9,6 @@ export const TEAM_MEMBERS = [
   {
     name: 'Ravikant Agrawal',
     aliases: [
-      'ravi',
-      'ravikant',
       'ravi agrawal',
       'ravikant agrawal',
       '@ravidilse',

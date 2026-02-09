@@ -4,14 +4,11 @@ import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { 
   Building2, 
-  Zap, 
+  AlertCircle, 
   User, 
   CheckCircle2, 
-  Plus, 
   FileText, 
-  AlertCircle,
-  Loader2,
-  ArrowRight
+  Zap
 } from 'lucide-react'
 
 interface ProposedData {
@@ -22,6 +19,11 @@ interface ProposedData {
   lastDecision?: string
   nextStep?: string
   rollingSummary?: string
+  exclusions?: {
+    organization?: boolean
+    deal?: boolean
+    contacts?: string[]
+  }
 }
 
 interface Candidate {
@@ -36,13 +38,21 @@ const AVAILABLE_PRODUCT_TAGS = ['KYA', 'Id/KYC', 'PoU', 'Others'] as const
 
 export default function ItemReviewUI({ 
   itemId, 
-  initialProposal 
+  initialProposal,
+  mode = 'all',
+  selectedDealId: controlledSelectedDealId,
+  onSelectDealId,
+  formId
 }: { 
   itemId: string
   initialProposal: {
     proposed: ProposedData
     candidates: Candidate[]
   }
+  mode?: 'all' | 'proposed' | 'matching'
+  selectedDealId?: string | null
+  onSelectDealId?: (dealId: string | null) => void
+  formId?: string
 }) {
   const router = useRouter()
   const [loading, setLoading] = useState(false)
@@ -69,9 +79,12 @@ export default function ItemReviewUI({
   const [contactRole, setContactRole] = useState(firstContact?.role || 'POC')
   
   // Selection state
-  const [selectedDealId, setSelectedDealId] = useState<string | null>(
+  const [uncontrolledSelectedDealId, setUncontrolledSelectedDealId] = useState<string | null>(
     initialProposal.candidates.length > 0 ? initialProposal.candidates[0].dealId : null
   )
+
+  const selectedDealId = controlledSelectedDealId ?? uncontrolledSelectedDealId
+  const setSelectedDealId = onSelectDealId ?? setUncontrolledSelectedDealId
 
   const handleApprove = async (action: 'approve' | 'edit_approve') => {
     setLoading(true)
@@ -139,245 +152,238 @@ export default function ItemReviewUI({
   }
 
   const InputLabel = ({ label }: { label: string }) => (
-    <label className="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1.5 ml-1">
+    <label className="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-2 ml-1">
       {label}
     </label>
   )
 
+  const SectionHeader = ({ icon: Icon, title, badge }: { icon: any, title: string, badge?: React.ReactNode }) => (
+    <div className="flex items-center justify-between mb-10">
+      <div className="flex items-center gap-4">
+        <div className="p-2.5 bg-gray-50 text-gray-400 rounded-2xl">
+          <Icon size={18} />
+        </div>
+        <h2 className="text-[11px] font-black text-gray-900 uppercase tracking-[0.2em]">{title}</h2>
+        {badge}
+      </div>
+    </div>
+  )
+
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-      {/* Left Column: AI Extraction & Editing */}
-      <div className="space-y-6">
-        <section className="bg-white p-8 rounded-[32px] border border-gray-100 shadow-sm">
-          <div className="flex items-center gap-2 mb-8">
-            <div className="p-1.5 bg-blue-50 text-blue-600 rounded-lg">
-              <Zap size={18} />
-            </div>
-            <h2 className="text-lg font-bold text-gray-900">AI Proposed Updates</h2>
-          </div>
-          
-          <div className="space-y-6">
-            <div>
-              <InputLabel label="Organization" />
-              <div className="relative">
-                <Building2 className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={16} />
-                <input 
-                  type="text" 
-                  value={orgName}
-                  onChange={(e) => setOrgName(e.target.value)}
-                  className="w-full pl-10 pr-4 py-2.5 bg-gray-50 border border-gray-100 rounded-xl text-sm font-medium focus:outline-none focus:ring-2 focus:ring-blue-500/10 focus:border-blue-500 transition-all"
-                  placeholder="Company name..."
-                />
-              </div>
-            </div>
+    <div className="h-full">
+      {/* Proposed Updates Section */}
+      {(mode === 'all' || mode === 'proposed') && (
+        <div className="flex flex-col h-full">
+          <section className="sleek-card p-12 rounded-[40px] flex-1 flex flex-col overflow-hidden shadow-2xl shadow-black/5">
+            <SectionHeader icon={Zap} title="Proposed Updates" />
 
-            <div>
-              <InputLabel label="Deal Name" />
-              <div className="relative">
-                <FileText className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={16} />
-                <input 
-                  type="text" 
-                  value={dealName}
-                  onChange={(e) => setDealName(e.target.value)}
-                  className="w-full pl-10 pr-4 py-2.5 bg-gray-50 border border-gray-100 rounded-xl text-sm font-medium focus:outline-none focus:ring-2 focus:ring-blue-500/10 focus:border-blue-500 transition-all"
-                  placeholder="Project/Deal name..."
-                />
-              </div>
-            </div>
+            <form
+              id={formId}
+              className="space-y-8 overflow-y-auto flex-1 pr-4 scrollbar-hide"
+              onSubmit={(e) => {
+                e.preventDefault()
+                handleApprove('edit_approve')
+              }}
+            >
+              {loading && (
+                <div className="sticky top-0 z-10 -mt-2 mb-2">
+                  <div className="px-4 py-2 rounded-2xl bg-[#5551FF]/5 border border-[#5551FF]/10 text-[10px] font-black uppercase tracking-widest text-[#5551FF]">
+                    Syncing to CRM...
+                  </div>
+                </div>
+              )}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
+                <div>
+                  <InputLabel label="Organization" />
+                  <div className="relative group">
+                    <Building2 className="absolute left-5 top-1/2 -translate-y-1/2 text-gray-300 group-focus-within:text-[#5551FF] transition-colors" size={18} />
+                    <input 
+                      type="text" 
+                      value={orgName}
+                      onChange={(e) => setOrgName(e.target.value)}
+                      disabled={loading}
+                      className="w-full pl-14 pr-6 py-4 bg-gray-50/50 border-none rounded-[24px] text-sm font-bold text-gray-900 outline-none focus:ring-2 focus:ring-[#5551FF]/10 focus:bg-white transition-all placeholder:text-gray-300 shadow-[0_4px_20px_rgb(0,0,0,0.02)]"
+                      placeholder="Company name..."
+                    />
+                  </div>
+                </div>
 
-            <div>
-              <InputLabel label="Product Tags" />
-              <div className="flex flex-wrap gap-2">
-                {AVAILABLE_PRODUCT_TAGS.map(tag => (
-                  <button
-                    key={tag}
-                    type="button"
-                    onClick={() => toggleTag(tag)}
-                    className={`px-4 py-1.5 rounded-xl text-xs font-bold border transition-all ${
-                      productTags.includes(tag)
-                        ? 'bg-[var(--primary-blue)] text-white border-[var(--primary-blue)] shadow-md'
-                        : 'bg-white text-gray-500 border-gray-200 hover:border-gray-300'
-                    }`}
-                  >
-                    {tag}
-                  </button>
-                ))}
+                <div>
+                  <InputLabel label="Deal Name" />
+                  <div className="relative group">
+                    <FileText className="absolute left-5 top-1/2 -translate-y-1/2 text-gray-300 group-focus-within:text-[#5551FF] transition-colors" size={18} />
+                    <input 
+                      type="text" 
+                      value={dealName}
+                      onChange={(e) => setDealName(e.target.value)}
+                      disabled={loading}
+                      className="w-full pl-14 pr-6 py-4 bg-gray-50/50 border-none rounded-[24px] text-sm font-bold text-gray-900 outline-none focus:ring-2 focus:ring-[#5551FF]/10 focus:bg-white transition-all placeholder:text-gray-300 shadow-[0_4px_20px_rgb(0,0,0,0.02)]"
+                      placeholder="Project/Deal name..."
+                    />
+                  </div>
+                </div>
               </div>
-            </div>
 
-            <div>
-              <InputLabel label="Primary Contact (POC)" />
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                <div className="relative">
-                  <User className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={16} />
+              <div>
+                <InputLabel label="Service Tags" />
+                <div className="flex flex-wrap gap-3">
+                  {AVAILABLE_PRODUCT_TAGS.map(tag => (
+                    <button
+                      key={tag}
+                      type="button"
+                      onClick={() => toggleTag(tag)}
+                      disabled={loading}
+                      className={`px-6 py-3 rounded-2xl text-[11px] font-black uppercase tracking-widest border-none transition-all ${
+                        productTags.includes(tag)
+                          ? 'bg-[#5551FF] text-white shadow-lg shadow-[#5551FF]/20 scale-[1.02]'
+                          : 'bg-gray-50 text-gray-400 hover:text-gray-600 hover:bg-gray-100'
+                      }`}
+                    >
+                      {tag}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              <div>
+                <InputLabel label="Primary Contact" />
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div className="relative group">
+                    <User className="absolute left-5 top-1/2 -translate-y-1/2 text-gray-300 group-focus-within:text-[#5551FF] transition-colors" size={18} />
+                    <input
+                      type="text"
+                      value={contactName}
+                      onChange={(e) => setContactName(e.target.value)}
+                      disabled={loading}
+                      className="w-full pl-14 pr-6 py-4 bg-gray-50/50 border-none rounded-[24px] text-sm font-bold text-gray-900 outline-none focus:ring-2 focus:ring-[#5551FF]/10 focus:bg-white transition-all placeholder:text-gray-300 shadow-[0_4px_20px_rgb(0,0,0,0.02)]"
+                      placeholder="Name..."
+                    />
+                  </div>
                   <input
                     type="text"
-                    value={contactName}
-                    onChange={(e) => setContactName(e.target.value)}
-                    className="w-full pl-10 pr-4 py-2.5 bg-gray-50 border border-gray-100 rounded-xl text-sm font-medium focus:outline-none focus:ring-2 focus:ring-blue-500/10 focus:border-blue-500 transition-all"
-                    placeholder="Name..."
+                    value={contactRole}
+                    onChange={(e) => setContactRole(e.target.value)}
+                    disabled={loading}
+                    className="w-full px-6 py-4 bg-gray-50/50 border-none rounded-[24px] text-sm font-bold text-gray-900 outline-none focus:ring-2 focus:ring-[#5551FF]/10 focus:bg-white transition-all placeholder:text-gray-300 shadow-[0_4px_20px_rgb(0,0,0,0.02)]"
+                    placeholder="Role (e.g. POC)"
                   />
                 </div>
-                <input
-                  type="text"
-                  value={contactRole}
-                  onChange={(e) => setContactRole(e.target.value)}
-                  className="w-full px-4 py-2.5 bg-gray-50 border border-gray-100 rounded-xl text-sm font-medium focus:outline-none focus:ring-2 focus:ring-blue-500/10 focus:border-blue-500 transition-all"
-                  placeholder="Role (e.g. POC)"
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
+                <div>
+                  <InputLabel label="Key Decision" />
+                  <textarea 
+                    value={lastDecision}
+                    onChange={(e) => setLastDecision(e.target.value)}
+                    disabled={loading}
+                    rows={2}
+                    className="w-full px-6 py-4 bg-gray-50/50 border-none rounded-[24px] text-sm font-bold text-gray-900 outline-none focus:ring-2 focus:ring-[#5551FF]/10 focus:bg-white transition-all resize-none placeholder:text-gray-300 shadow-[0_4px_20px_rgb(0,0,0,0.02)]"
+                    placeholder="What was agreed?"
+                  />
+                </div>
+
+                <div>
+                  <InputLabel label="Next Milestone" />
+                  <textarea 
+                    value={nextStep}
+                    onChange={(e) => setNextStep(e.target.value)}
+                    disabled={loading}
+                    rows={2}
+                    className="w-full px-6 py-4 bg-gray-50/50 border-none rounded-[24px] text-sm font-bold text-gray-900 outline-none focus:ring-2 focus:ring-[#5551FF]/10 focus:bg-white transition-all resize-none placeholder:text-gray-300 shadow-[0_4px_20px_rgb(0,0,0,0.02)]"
+                    placeholder="What follows?"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <InputLabel label="Capture Summary" />
+                <textarea 
+                  value={summary}
+                  onChange={(e) => setSummary(e.target.value)}
+                  disabled={loading}
+                  rows={3}
+                  className="w-full px-6 py-4 bg-gray-50/50 border-none rounded-[24px] text-sm font-bold text-gray-900 outline-none focus:ring-2 focus:ring-[#5551FF]/10 focus:bg-white transition-all resize-none placeholder:text-gray-300 shadow-[0_4px_20px_rgb(0,0,0,0.02)]"
+                  placeholder="Key takeaways..."
                 />
               </div>
+            </form>
+          </section>
+
+          {error && (
+            <div className="flex items-center gap-4 p-5 bg-red-50 border-none rounded-[24px] text-[11px] font-black text-red-600 uppercase tracking-widest animate-in fade-in slide-in-from-top-2 mt-6 shadow-xl shadow-red-500/5">
+              <AlertCircle size={20} />
+              <span>{error}</span>
             </div>
-
-            <div>
-              <InputLabel label="Last Decision" />
-              <textarea 
-                value={lastDecision}
-                onChange={(e) => setLastDecision(e.target.value)}
-                rows={2}
-                className="w-full px-4 py-2.5 bg-gray-50 border border-gray-100 rounded-xl text-sm font-medium focus:outline-none focus:ring-2 focus:ring-blue-500/10 focus:border-blue-500 transition-all resize-none"
-                placeholder="What was agreed?"
-              />
-            </div>
-
-            <div>
-              <InputLabel label="Next Step" />
-              <input 
-                type="text" 
-                value={nextStep}
-                onChange={(e) => setNextStep(e.target.value)}
-                className="w-full px-4 py-2.5 bg-gray-50 border border-gray-100 rounded-xl text-sm font-medium focus:outline-none focus:ring-2 focus:ring-blue-500/10 focus:border-blue-500 transition-all"
-                placeholder="What follows?"
-              />
-            </div>
-
-            <div>
-              <InputLabel label="Rolling Summary" />
-              <textarea 
-                value={summary}
-                onChange={(e) => setSummary(e.target.value)}
-                rows={4}
-                className="w-full px-4 py-2.5 bg-gray-50 border border-gray-100 rounded-xl text-sm font-medium focus:outline-none focus:ring-2 focus:ring-blue-500/10 focus:border-blue-500 transition-all resize-none"
-                placeholder="Key takeaways..."
-              />
-            </div>
-          </div>
-        </section>
-
-        {error && (
-          <div className="flex items-center gap-2 p-4 bg-red-50 border border-red-100 rounded-2xl text-sm text-red-600 font-bold animate-in fade-in slide-in-from-top-2">
-            <AlertCircle size={18} />
-            <span>{error}</span>
-          </div>
-        )}
-
-        <button
-          onClick={() => handleApprove('edit_approve')}
-          disabled={loading}
-          className="w-full flex items-center justify-center gap-3 bg-gray-900 text-white py-4 px-6 rounded-2xl font-black text-sm hover:bg-gray-800 disabled:opacity-30 disabled:cursor-not-allowed transition-all shadow-lg active:scale-[0.98]"
-        >
-          {loading ? (
-            <Loader2 size={20} className="animate-spin" />
-          ) : (
-            <CheckCircle2 size={20} />
           )}
-          <span>{loading ? 'Updating CRM...' : 'Approve & Update CRM'}</span>
-        </button>
-      </div>
+        </div>
+      )}
 
-      {/* Right Column: Record Matching */}
-      <div className="space-y-6 h-full">
-        <section className="bg-[#F8F9F8] p-8 rounded-[32px] border border-gray-100 h-full flex flex-col">
-          <div className="flex items-center justify-between mb-8">
-            <h2 className="text-lg font-bold text-gray-900">Matching Records</h2>
-            <div className="px-2 py-0.5 bg-gray-200 text-gray-500 rounded-full text-[10px] font-black uppercase tracking-widest">
-              {initialProposal.candidates.length} Found
-            </div>
-          </div>
-          
-          <div className="flex-1 space-y-4 overflow-y-auto">
-            {initialProposal.candidates.length === 0 ? (
-              <div className="flex flex-col items-center justify-center py-12 text-center">
-                <div className="p-4 bg-white rounded-full shadow-sm mb-4">
-                  <Zap size={32} className="text-gray-300" />
-                </div>
-                <p className="text-gray-500 font-bold mb-1">No matches found</p>
-                <p className="text-xs text-gray-400 max-w-[200px]">We'll create a new deal and organization for you.</p>
-              </div>
-            ) : (
-              <div className="space-y-3">
-                {initialProposal.candidates.map((c) => (
-                  <div 
-                    key={c.dealId}
-                    onClick={() => setSelectedDealId(c.dealId)}
-                    className={`group p-5 rounded-2xl border-2 transition-all cursor-pointer ${
-                      selectedDealId === c.dealId 
-                        ? 'bg-white border-gray-900 shadow-xl scale-[1.02]' 
-                        : 'bg-white border-transparent hover:border-gray-200 shadow-sm'
-                    }`}
-                  >
-                    <div className="flex justify-between items-start mb-2">
-                      <div className="min-w-0">
-                        <div className="flex items-center gap-2 mb-1">
-                          <span className="text-[10px] font-black text-blue-600 uppercase tracking-widest bg-blue-50 px-2 py-0.5 rounded">
-                            {c.organizationName || 'No Org'}
-                          </span>
-                          <span className="text-[10px] font-black text-green-600 uppercase tracking-widest bg-green-50 px-2 py-0.5 rounded">
-                            {(c.confidence * 100).toFixed(0)}% Match
-                          </span>
-                        </div>
-                        <h3 className="font-bold text-gray-900 truncate">{c.dealName}</h3>
-                      </div>
-                      {selectedDealId === c.dealId && (
-                        <div className="p-1 bg-gray-900 text-white rounded-full animate-in zoom-in">
-                          <CheckCircle2 size={14} />
-                        </div>
-                      )}
-                    </div>
-                    {c.evidenceSnippet && (
-                      <div className="mt-3 flex gap-2">
-                        <div className="w-1 bg-gray-100 rounded-full" />
-                        <p className="text-xs text-gray-500 italic leading-relaxed">
-                          "{c.evidenceSnippet}"
-                        </p>
-                      </div>
-                    )}
-                  </div>
-                ))}
-              </div>
-            )}
+      {/* Entity Matching Section */}
+      {(mode === 'all' || mode === 'matching') && (
+        <div className="flex flex-col h-full">
+          <section className="sleek-card p-12 rounded-[40px] flex flex-col h-full overflow-hidden shadow-2xl shadow-black/5">
+            <SectionHeader 
+              icon={Zap} 
+              title="Entity Matching" 
+              badge={
+                <span className="px-3 py-1 bg-gray-50 text-gray-400 rounded-full text-[10px] font-black uppercase tracking-widest border border-gray-100">
+                  {initialProposal.candidates.length} Detected
+                </span>
+              }
+            />
             
-            <div className="pt-4 mt-4 border-t border-gray-200/50">
-              <div 
-                onClick={() => setSelectedDealId(null)}
-                className={`group p-5 rounded-2xl border-2 border-dashed transition-all cursor-pointer flex items-center justify-between ${
-                  selectedDealId === null 
-                    ? 'bg-white border-gray-900 shadow-xl' 
-                    : 'border-gray-200 hover:border-gray-400'
-                }`}
-              >
-                <div className="flex items-center gap-4">
-                  <div className={`p-2 rounded-xl transition-colors ${
-                    selectedDealId === null ? 'bg-gray-900 text-white' : 'bg-gray-100 text-gray-400 group-hover:bg-gray-200'
-                  }`}>
-                    <Plus size={20} />
+            <div className="flex-1 space-y-5 overflow-y-auto min-h-0 pr-4 scrollbar-hide">
+              {initialProposal.candidates.length === 0 ? (
+                <div className="flex flex-col items-center justify-center py-24 text-center">
+                  <div className="w-20 h-20 bg-gray-50 rounded-[32px] flex items-center justify-center mb-8 border border-gray-100/50">
+                    <Zap size={32} className="text-gray-200" />
                   </div>
-                  <div>
-                    <p className={`font-bold text-sm ${selectedDealId === null ? 'text-gray-900' : 'text-gray-500'}`}>
-                      Create as new deal
-                    </p>
-                    <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mt-0.5">
-                      New record
-                    </p>
-                  </div>
+                  <h3 className="text-[11px] font-black text-gray-400 uppercase tracking-[0.2em] mb-3">No matching entities</h3>
+                  <p className="text-xs text-gray-300 font-bold max-w-[240px] leading-relaxed uppercase tracking-tight">
+                    A fresh CRM record will be initialized.
+                  </p>
                 </div>
-                {selectedDealId === null && (
-                  <ArrowRight size={18} className="text-gray-900 animate-in slide-in-from-left-2" />
-                )}
-              </div>
+              ) : (
+                <div className="space-y-4">
+                  {initialProposal.candidates.map((c) => (
+                    <div 
+                      key={c.dealId}
+                      onClick={() => setSelectedDealId(c.dealId)}
+                      className={`group p-8 rounded-[32px] border-none transition-all cursor-pointer ${
+                        selectedDealId === c.dealId 
+                          ? 'bg-[#5551FF]/5 ring-2 ring-[#5551FF] shadow-2xl scale-[1.02]' 
+                          : 'bg-gray-50/50 hover:bg-white hover:shadow-2xl transition-all'
+                      }`}
+                    >
+                      <div className="flex justify-between items-start gap-6">
+                        <div className="min-w-0 flex-1">
+                          <div className="flex flex-wrap items-center gap-3 mb-4">
+                            <span className="text-[10px] font-black text-[#5551FF] uppercase tracking-widest bg-[#5551FF]/5 px-3 py-1 rounded-full border border-[#5551FF]/10">
+                              {c.organizationName || 'No Org'}
+                            </span>
+                            <span className={`text-[10px] font-black uppercase tracking-widest px-3 py-1 rounded-full ${
+                              c.confidence > 0.8 ? 'bg-emerald-50 text-emerald-600' : 'bg-amber-50 text-amber-600'
+                            }`}>
+                              {(c.confidence * 100).toFixed(0)}% Match
+                            </span>
+                          </div>
+                          <h3 className="font-black text-gray-900 truncate text-base tracking-tight">{c.dealName}</h3>
+                        </div>
+                        <div className={`p-2 rounded-full transition-all ${
+                          selectedDealId === c.dealId ? 'bg-[#5551FF] text-white shadow-lg' : 'bg-white text-gray-200 border border-gray-100 shadow-sm'
+                        }`}>
+                          <CheckCircle2 size={16} />
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
-          </div>
-        </section>
-      </div>
+          </section>
+        </div>
+      )}
     </div>
   )
 }

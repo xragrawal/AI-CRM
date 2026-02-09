@@ -6,12 +6,9 @@ import {
   Inbox, 
   Search, 
   Filter, 
-  ArrowUpDown, 
-  ChevronDown,
-  MessageSquare,
-  Clock,
-  ChevronRight,
-  MoreHorizontal
+  MessageSquare, 
+  Clock, 
+  ArrowUpRight
 } from 'lucide-react'
 
 interface InboxItem {
@@ -23,10 +20,11 @@ interface InboxItem {
 
 function formatShortDate(iso: string): string {
   const d = new Date(iso)
-  return d.toLocaleDateString(undefined, {
+  return d.toLocaleDateString([], {
     month: 'short',
     day: 'numeric',
-    year: d.getFullYear() !== new Date().getFullYear() ? 'numeric' : undefined,
+    hour: '2-digit',
+    minute: '2-digit'
   })
 }
 
@@ -52,99 +50,82 @@ export default function InboxPage() {
   )
 
   return (
-    <div className="flex flex-col h-full bg-white">
-      {/* Toolbar */}
-      <div className="px-8 py-4 border-b border-gray-100 flex items-center justify-between">
-        <div className="flex items-center gap-10">
-          <div className="flex items-center gap-3 px-4 py-2 rounded-xl text-base font-bold text-gray-600 hover:bg-gray-50 cursor-pointer">
-            <Inbox size={20} className="text-gray-400" />
-            <span>Deferred Items</span>
-            <ChevronDown size={18} className="text-gray-300" />
-          </div>
-
-          <div className="flex items-center gap-8">
-            <button className="flex items-center gap-3 text-base font-bold text-gray-500 hover:text-gray-900 px-3 py-2">
-              <Filter size={20} className="text-gray-400" />
-              <span>Filter</span>
-            </button>
-            <button className="flex items-center gap-3 text-base font-bold text-gray-500 hover:text-gray-900 px-3 py-2">
-              <ArrowUpDown size={20} className="text-gray-400" />
-              <span>Sort</span>
-            </button>
-          </div>
-        </div>
-
-        <div className="flex items-center gap-6">
-           <div className="relative">
-              <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" size={20} />
-              <input 
-                type="text"
-                placeholder="Search inbox..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-12 pr-6 py-3 bg-gray-50 border border-gray-100 rounded-2xl text-base focus:outline-none focus:ring-2 focus:ring-blue-500/10 focus:border-blue-500 transition-all w-80"
-              />
-           </div>
+    <div className="flex flex-col h-full space-y-6">
+      <div className="flex items-center justify-between">
+        <div className="space-y-1">
+          <h2 className="text-2xl font-black text-gray-900 tracking-tight">Inbox</h2>
+          <p className="text-xs font-medium text-gray-400 uppercase tracking-widest">
+            {filteredItems.length} deferred items awaiting processing
+          </p>
         </div>
       </div>
 
-      <div className="flex-1 overflow-auto">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div className="relative group flex-1 max-w-md">
+          <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-300 group-focus-within:text-blue-500 transition-colors" size={16} />
+          <input 
+            type="text"
+            placeholder="Search inbox..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="w-full pl-10 pr-4 py-2.5 bg-white border border-gray-100 rounded-xl text-xs font-medium focus:outline-none focus:ring-4 focus:ring-blue-500/5 focus:border-blue-500 transition-all shadow-sm"
+          />
+        </div>
+        <button className="flex items-center gap-2 px-4 py-2.5 bg-white border border-gray-100 rounded-xl text-[10px] font-black text-gray-500 uppercase tracking-widest hover:border-gray-200 transition-all shadow-sm">
+          <Filter size={14} />
+          <span>Filter</span>
+        </button>
+      </div>
+
+      <div className="flex-1 overflow-hidden">
         {loading ? (
-          <div className="flex items-center justify-center h-full">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900"></div>
+          <div className="flex items-center justify-center h-64 bg-white border border-gray-100 rounded-[32px]">
+            <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-blue-600"></div>
           </div>
         ) : error ? (
-          <div className="flex flex-col items-center justify-center h-full py-12">
-             <p className="text-red-500 font-bold">{error}</p>
+          <div className="flex flex-col items-center justify-center h-64 bg-white border border-red-100 rounded-[32px]">
+             <p className="text-xs font-black text-red-500 uppercase tracking-widest">{error}</p>
           </div>
         ) : filteredItems.length === 0 ? (
-          <div className="flex flex-col items-center justify-center h-full py-12">
-             <div className="p-4 bg-gray-50 rounded-full mb-4">
-                <Inbox size={32} className="text-gray-300" />
-             </div>
-             <p className="text-gray-500 font-bold">Inbox is empty</p>
-             <p className="text-sm text-gray-400 mt-1">Deferred items will appear here.</p>
+          <div className="flex flex-col items-center justify-center h-64 bg-white border border-dashed border-gray-200 rounded-[32px]">
+             <Inbox size={24} className="text-gray-200 mb-2" />
+             <p className="text-xs font-black text-gray-400 uppercase tracking-widest">Inbox is clear</p>
           </div>
         ) : (
-          <div className="px-8 py-6">
-            <div className="grid grid-cols-1 gap-4">
-              {filteredItems.map((item) => (
-                <Link
-                  key={item.id}
-                  href={`/items/${item.id}`}
-                  className="group flex items-center justify-between p-6 bg-white border border-gray-100 rounded-[24px] hover:border-blue-200 hover:shadow-md transition-all"
-                >
-                  <div className="flex items-start gap-6 flex-1 min-w-0">
-                    <div className="mt-1 p-4 bg-gray-50 text-gray-400 rounded-2xl group-hover:bg-blue-50 group-hover:text-blue-500 transition-colors">
-                      <MessageSquare size={24} />
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-center gap-4 mb-2">
-                        <span className="text-xs font-black text-gray-400 uppercase tracking-widest bg-gray-100 px-3 py-1 rounded">
-                          Inbox Item
-                        </span>
-                        <div className="flex items-center gap-2 text-xs font-black text-gray-400 uppercase tracking-widest">
-                          <Clock size={14} />
-                          <span>{formatShortDate(item.createdAt)}</span>
-                        </div>
+          <div className="space-y-3">
+            {filteredItems.map((item) => (
+              <Link
+                key={item.id}
+                href={`/items/${item.id}`}
+                className="group flex items-center justify-between p-5 bg-white border border-gray-100 rounded-2xl hover:border-blue-100 hover:shadow-md transition-all duration-300"
+              >
+                <div className="flex items-start gap-5 flex-1 min-w-0">
+                  <div className="mt-1 p-2.5 bg-gray-50 text-gray-400 rounded-xl group-hover:bg-blue-50 group-hover:text-blue-600 transition-colors border border-transparent group-hover:border-blue-100">
+                    <MessageSquare size={18} />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center gap-3 mb-1.5">
+                      <span className="text-[10px] font-black text-gray-400 uppercase tracking-tighter bg-gray-50 px-1.5 py-0.5 rounded border border-gray-100/50">
+                        Deferred Entry
+                      </span>
+                      <div className="flex items-center gap-1 text-[10px] font-bold text-gray-300 uppercase tracking-tight">
+                        <Clock size={10} />
+                        <span>{formatShortDate(item.createdAt)}</span>
                       </div>
-                      <p className="text-base text-gray-600 font-medium leading-relaxed line-clamp-2">
-                        {item.rawText}
-                      </p>
                     </div>
+                    <p className="text-xs text-gray-600 font-medium leading-relaxed line-clamp-2 pr-10">
+                      {item.rawText}
+                    </p>
                   </div>
-                  
-                  <div className="flex items-center gap-6 ml-8">
-                    <div className="p-2 text-gray-300 group-hover:text-blue-500 transition-colors">
-                      <ChevronRight size={24} />
-                    </div>
-                    <button className="p-2 text-gray-300 hover:text-gray-600 transition-colors">
-                      <MoreHorizontal size={24} />
-                    </button>
+                </div>
+                
+                <div className="flex items-center gap-2">
+                  <div className="p-2 text-gray-200 group-hover:text-blue-500 transition-colors">
+                    <ArrowUpRight size={18} />
                   </div>
-                </Link>
-              ))}
-            </div>
+                </div>
+              </Link>
+            ))}
           </div>
         )}
       </div>

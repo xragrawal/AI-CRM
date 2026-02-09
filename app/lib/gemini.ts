@@ -94,6 +94,14 @@ function safeJsonParse<T>(text: string): T {
   return JSON.parse(extracted) as T
 }
 
+function debugLog(label: string, value: unknown) {
+  if (process.env.AI_DEBUG_LOG !== '1') return
+  const MAX = 4000
+  const str = typeof value === 'string' ? value : JSON.stringify(value)
+  const out = str.length > MAX ? str.slice(0, MAX) + '\n...[truncated]...' : str
+  console.log(label, out)
+}
+
 export async function extractProposalFromText(rawText: string): Promise<ExtractedProposal> {
   assertGeminiConfigured()
   
@@ -107,19 +115,68 @@ export async function extractProposalFromText(rawText: string): Promise<Extracte
   
   const prompt = `You are analyzing a conversation or message to extract CRM-relevant information.
 
-IMPORTANT EXCLUSIONS:
-- Do NOT extract these people as contacts (they are team members): ${excludedContactNames}
-- Do NOT extract these as organizations or deals (this is our own company): ${excludedOrgNames}
+IMPORTANT CONTEXT (internal entities):
+- These people may be internal team members: ${excludedContactNames}
+- These org/deal names may refer to our own company: ${excludedOrgNames}
+
+RULE:
+- You MAY still extract these names if they are explicitly mentioned in the text so the user can see them in the UI.
+- Downstream code will decide whether to create/update CRM records for them.
+
+CRITICAL DISAMBIGUATION RULES:
+- The user writing the note is NOT a contact. If the text says "I am X" or "I'm X" or "This is X" or otherwise introduces the speaker, do NOT extract the speaker as a contact.
+- Prefer extracting the OTHER party in phrases like:
+  - "I spoke with Y from ORG"
+  - "Had a chat with Y at ORG"
+  - "Call with Y (ORG)"
+  - "Met Y from ORG"
+- If multiple people are mentioned, the primary contact should be the counterparty you interacted with (often the one after "with").
+- If the counterparty is associated with an org/company (e.g., "Y from ORG"), ALWAYS set suggestedOrganizationName to that ORG.
+- If the only org mentioned is our own company and there is no external counterparty org, you may leave suggestedOrganizationName null.
+
+DEAL/PROJECT NAMING RULES:
+- If the text does not explicitly mention a deal/project name, you MUST still generate a short suggestedDealName.
+- Use this format: "<Organization> - <short topic>".
+- The short topic should be 2-5 words derived from the text (e.g., "Dubai client", "KYC integration", "Pilot", "Partnership").
+- If organization is unknown, use the primary contact name instead of organization.
+
+EXAMPLES (few-shot):
+Input: "I am Aswin from KRNL. Had a chat with Ravi from Billions network for a Dubai based client."
+Output:
+{
+  "suggestedDealName": "Billions network - Dubai client",
+  "suggestedOrganizationName": "Billions network",
+  "productTags": ["Others"],
+  "contacts": [{"name": "Ravi", "role": "counterparty"}],
+  "lastDecision": null,
+  "nextStep": null,
+  "summary": "Aswin (KRNL) spoke with Ravi (Billions network) regarding a Dubai-based client."
+}
+
+Input: "Chatted with Neha at Acme about KYC. I (Ravi) will send them our docs tomorrow."
+Output:
+{
+  "suggestedDealName": null,
+  "suggestedOrganizationName": "Acme",
+  "productTags": ["Id/KYC"],
+  "contacts": [{"name": "Neha", "role": "counterparty"}],
+  "lastDecision": null,
+  "nextStep": "Send docs tomorrow",
+  "summary": "Discussion with Neha at Acme about KYC; next step is to send docs."
+}
 ${productTagContext}
 ${learningContext}
 Extract the following from this text:
 1. Deal/Project name (if mentioned or can be inferred) - NOT our own company
-2. Organization/Company name (if mentioned) - NOT our own company
+2. Organization/Company name of the counterparty (if mentioned or can be inferred). If the text explicitly says "X from ORG", return "ORG".
 3. Product Tags: Based on the definitions above, identify which Billions products are EXPLICITLY mentioned or clearly relevant. Be conservative - only tag if there's clear evidence.
 4. People mentioned (names and roles if clear) - NOT our team members
 5. Last decision or agreement made
 6. Next step or action item
-7. Brief summary of the conversation
+7. Brief summary of the conversation (ALWAYS provide a short summary even if no deal/org/contact should be created)
+
+IMPORTANT:
+- Exclusions only affect whether you create contacts/deals/orgs. Even if everything is excluded, still return a helpful summary, and set productTags to ["Others"] if unsure.
 
 Text to analyze:
 """
@@ -137,17 +194,29 @@ Respond ONLY with valid JSON in this exact format:
   "summary": "string or null"
 }
 
-CRITICAL: For productTags, only include tags if the text CLEARLY relates to that product. Do NOT guess or assume. If unsure, leave the array empty or use "Others". Learn from the past corrections shown above.`
+CRITICAL: For productTags, only include tags if the text CLEARLY relates to that product. Do NOT guess or assume. If unsure, use ["Others"]. Learn from the past corrections shown above.`
 
   try {
     console.log('[Gemini] Starting extraction, text length:', prompt.length)
     const result = await geminiJson.generateContent(prompt)
     const text = result.response.text()
     console.log('[Gemini] Response received, length:', text?.length ?? 0)
+    debugLog('[Gemini] Raw response:', text)
     if (!text || text.trim() === '') {
       throw new Error('Gemini returned empty response - check if API key is valid')
     }
-    return safeJsonParse<ExtractedProposal>(text)
+    const parsed = safeJsonParse<ExtractedProposal>(text)
+    return {
+      ...parsed,
+      productTags:
+        Array.isArray(parsed.productTags) && parsed.productTags.length > 0
+          ? parsed.productTags
+          : ['Others'],
+      summary:
+        parsed.summary && parsed.summary.trim() !== ''
+          ? parsed.summary
+          : rawText.trim().slice(0, 240),
+    }
   } catch (error: unknown) {
     console.error('[Gemini] Extraction error details:', {
       name: error instanceof Error ? error.name : 'Unknown',
@@ -316,6 +385,55 @@ Respond with JSON:
     return safeJsonParse<RecallResponse>(text)
   } catch (error) {
     console.error('Gemini recall error:', error)
+    throw error
+  }
+}
+
+export async function chatWithAssistant(
+  userMessage: string,
+  conversationHistory: Array<{ role: 'user' | 'assistant'; content: string }>,
+  context?: {
+    deals?: Array<{ name: string; stage: string; organizationName: string | null }>
+    contacts?: Array<{ displayName: string; email: string | null }>
+    recentActivity?: Array<{ dealName: string | null; rawText: string }>
+  }
+): Promise<string> {
+  assertGeminiConfigured()
+
+  let systemPrompt = `You are a helpful AI assistant for a personal CRM system. You help users:
+- Track deals, contacts, and organizations
+- Answer questions about their business relationships
+- Extract structured data from conversations
+- Provide insights and reminders
+
+Be concise, friendly, and helpful.`
+
+  if (context) {
+    systemPrompt += '\n\nCurrent CRM Context:\n'
+    if (context.deals && context.deals.length > 0) {
+      systemPrompt += `\nDeals (${context.deals.length}):\n`
+      systemPrompt += context.deals.slice(0, 10).map((d) => `- ${d.name} (${d.stage})`).join('\n')
+    }
+    if (context.contacts && context.contacts.length > 0) {
+      systemPrompt += `\n\nContacts (${context.contacts.length}):\n`
+      systemPrompt += context.contacts.slice(0, 10).map((c) => `- ${c.displayName}`).join('\n')
+    }
+  }
+
+  const conversationText = conversationHistory
+    .map((m) => `${m.role === 'user' ? 'User' : 'Assistant'}: ${m.content}`)
+    .join('\n\n')
+
+  const fullPrompt = `${systemPrompt}
+
+${conversationText ? `Previous conversation:\n${conversationText}\n\n` : ''}User: ${userMessage}`
+
+  try {
+    const result = await gemini.generateContent(fullPrompt)
+    const response = result.response.text()
+    return response
+  } catch (error) {
+    console.error('Gemini chat error:', error)
     throw error
   }
 }
