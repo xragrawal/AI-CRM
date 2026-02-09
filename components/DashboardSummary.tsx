@@ -45,6 +45,10 @@ interface DashboardData {
     name: string
     value: number
   }>
+  stageDistribution: Array<{
+    stage: string | null
+    count: number
+  }>
 }
 
 const COLORS = ['#5551FF', '#E5E7EB']
@@ -112,43 +116,43 @@ export default function DashboardSummary() {
   return (
     <div className="space-y-10">
       {/* Header Info */}
-      <div className="flex flex-col gap-1">
-        <div className="flex items-center gap-2">
-          <div className="flex -space-x-2">
+      <div className="flex flex-col gap-2">
+        <div className="flex items-center gap-3">
+          <div className="flex -space-x-3">
             {[1, 2, 3].map(i => (
-              <div key={i} className="w-5 h-5 rounded-full border-2 border-[#ECEFF3] bg-blue-100 flex items-center justify-center text-[8px] font-black text-blue-600 shadow-sm">
+              <div key={i} className="w-8 h-8 rounded-full border-2 border-white bg-blue-100 flex items-center justify-center text-[10px] font-black text-blue-600 shadow-sm">
                 {String.fromCharCode(64 + i)}
               </div>
             ))}
           </div>
-          <span className="text-[10px] font-black text-[#5551FF] uppercase tracking-widest bg-[#5551FF]/5 px-2 py-0.5 rounded-md border border-[#5551FF]/10">
+          <span className="text-[12px] font-black text-[#5551FF] uppercase tracking-widest bg-[#5551FF]/5 px-3 py-1 rounded-lg border border-[#5551FF]/10">
             AI Agent Active
           </span>
         </div>
-        <h2 className="text-3xl font-black text-gray-900 tracking-tight">
+        <h2 className="text-4xl font-black text-gray-900 tracking-tight">
           Command <span className="text-[#5551FF]">Center</span>
         </h2>
-        <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">
+        <p className="text-sm font-bold text-gray-500 uppercase tracking-widest">
           Unified intelligence for your high-stakes relationships.
         </p>
       </div>
 
       <div className="flex items-center justify-between">
-        <h1 className="heading-xl">Your Sales Analysis</h1>
-        <div className="flex items-center gap-3">
-          <button className="flex items-center gap-2 px-5 py-2.5 bg-[#5551FF] text-white rounded-full text-[11px] font-bold shadow-lg shadow-[#5551FF]/20 hover:scale-[1.02] transition-all">
-            <Plus size={14} />
+        <h1 className="text-2xl font-black text-gray-900">Your Sales Analysis</h1>
+        <div className="flex items-center gap-4">
+          <button className="flex items-center gap-3 px-6 py-3 bg-[#5551FF] text-white rounded-2xl text-xs font-black uppercase tracking-widest shadow-lg shadow-[#5551FF]/20 hover:scale-[1.02] transition-all">
+            <Plus size={18} />
             <span>Add Widget</span>
           </button>
-          <button className="flex items-center gap-2 px-5 py-2.5 bg-white text-gray-900 rounded-full text-[11px] font-bold shadow-sm border border-gray-100 hover:border-gray-200 transition-all">
-            <Filter size={14} />
+          <button className="flex items-center gap-3 px-6 py-3 bg-white text-gray-900 rounded-2xl text-xs font-black uppercase tracking-widest shadow-sm border border-gray-100 hover:border-gray-200 transition-all">
+            <Filter size={18} />
             <span>Filter</span>
           </button>
         </div>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        {/* Intelligence Card - Link to /assistant */}
+        {/* Deal Stage Distribution Card */}
         <div className="lg:col-span-2 relative overflow-hidden rounded-[40px] bg-[#111111] h-[320px] group shadow-2xl">
           <div className="absolute inset-0 opacity-40">
             <div className="absolute inset-0 bg-gradient-to-br from-blue-600/20 via-transparent to-transparent" />
@@ -158,23 +162,60 @@ export default function DashboardSummary() {
             </div>
           </div>
           
-          <div className="relative h-full flex flex-col p-8">
-            <div className="mb-auto">
-              <h2 className="text-2xl font-black text-white mb-2">Intelligence</h2>
-              <p className="text-gray-400 font-medium text-sm leading-relaxed max-w-[280px]">
-                Analyze your {data.stats.deals} active deals and {data.stats.contacts} contacts for insights and next steps.
+          <div className="relative h-full flex flex-col p-8 sm:p-10">
+            <div className="mb-6">
+              <h2 className="text-2xl sm:text-3xl font-black text-white mb-2">Intelligence</h2>
+              <p className="text-gray-400 font-bold text-sm sm:text-base leading-relaxed whitespace-nowrap">
+                Pipeline distribution across {data.stats.deals} active deal stages.
               </p>
             </div>
             
-            <Link 
-              href="/assistant"
-              className="mt-auto flex items-center justify-between p-3 bg-white/10 hover:bg-white/20 backdrop-blur-md rounded-full border border-white/10 transition-all group/btn"
-            >
-              <span className="text-sm font-bold text-white px-4">Analyze Pipeline</span>
-              <div className="w-8 h-8 bg-[#FF6B6B] text-white rounded-full flex items-center justify-center group-hover/btn:scale-110 transition-transform shadow-lg">
-                <ArrowUpRight size={16} />
+            <div className="flex-1 min-h-0 overflow-y-auto pr-2 custom-scrollbar">
+              <div className="space-y-5">
+                {data.stageDistribution.map(stage => {
+                  const getStageLabel = (s: string | null) => {
+                    if (s === 'qualified') return 'Qualified'
+                    if (s === 'mou_signed') return 'MOU Signed'
+                    if (s === 'integration') return 'Integration'
+                    if (s === 'won') return 'Won'
+                    if (s === 'lost_on_hold') return 'On Hold'
+                    return 'Other'
+                  }
+                  const getStageColor = (s: string | null) => {
+                    if (s === 'won') return '#10B981'
+                    if (s === 'integration') return '#F59E0B'
+                    if (s === 'mou_signed') return '#3B82F6'
+                    if (s === 'lost_on_hold') return '#EF4444'
+                    return '#5551FF'
+                  }
+                  const maxCount = Math.max(...data.stageDistribution.map(s => s.count), 1)
+                  const percentage = (stage.count / maxCount) * 100
+                  
+                  return (
+                    <div key={stage.stage || 'other'} className="group">
+                      <div className="flex items-center justify-between mb-2">
+                        <span className="text-[10px] font-black text-gray-400 uppercase tracking-[0.15em] group-hover:text-white transition-colors">
+                          {getStageLabel(stage.stage)}
+                        </span>
+                        <span className="text-[10px] font-black text-white bg-white/10 px-2 py-0.5 rounded-md">
+                          {stage.count}
+                        </span>
+                      </div>
+                      <div className="w-full h-2 bg-white/5 rounded-full overflow-hidden border border-white/5">
+                        <div 
+                          className="h-full rounded-full transition-all duration-1000 ease-out shadow-[0_0_15px_rgba(0,0,0,0.5)]" 
+                          style={{ 
+                            backgroundColor: getStageColor(stage.stage), 
+                            width: `${percentage}%`,
+                            boxShadow: `0 0 10px ${getStageColor(stage.stage)}40`
+                          }} 
+                        />
+                      </div>
+                    </div>
+                  )
+                })}
               </div>
-            </Link>
+            </div>
           </div>
         </div>
 
@@ -182,12 +223,12 @@ export default function DashboardSummary() {
         <div className="lg:col-span-1 sleek-card h-[320px] p-8 flex flex-col">
           <div className="flex items-center justify-between mb-6">
             <div className="flex items-center gap-3">
-              <div className="p-2 bg-gray-50 text-gray-400 rounded-xl">
-                <TrendingUp size={16} />
+              <div className="p-2.5 bg-blue-50 text-[#5551FF] rounded-xl">
+                <TrendingUp size={20} />
               </div>
-              <h3 className="text-[10px] font-black text-gray-900 uppercase tracking-widest">Velocity</h3>
+              <h3 className="text-xs font-black text-gray-900 uppercase tracking-widest">Velocity</h3>
             </div>
-            <button className="p-1 text-gray-300"><MoreVertical size={14} /></button>
+            <button className="p-1 text-gray-300"><MoreVertical size={18} /></button>
           </div>
           
           <div className="flex-1 min-h-0">
@@ -231,12 +272,12 @@ export default function DashboardSummary() {
         <div className="lg:col-span-1 sleek-card h-[320px] p-8 flex flex-col">
           <div className="flex items-center justify-between mb-6">
             <div className="flex items-center gap-3">
-              <div className="p-2 bg-gray-50 text-gray-400 rounded-xl">
-                <Activity size={16} />
+              <div className="p-2.5 bg-blue-50 text-[#5551FF] rounded-xl">
+                <Activity size={20} />
               </div>
-              <h3 className="text-[10px] font-black text-gray-900 uppercase tracking-widest">Activity</h3>
+              <h3 className="text-xs font-black text-gray-900 uppercase tracking-widest">Activity</h3>
             </div>
-            <button className="p-1 text-gray-300"><MoreVertical size={14} /></button>
+            <button className="p-1 text-gray-300"><MoreVertical size={18} /></button>
           </div>
 
           <div className="flex gap-4 mb-6">
@@ -264,12 +305,12 @@ export default function DashboardSummary() {
         <div className="lg:col-span-2 sleek-card p-8">
           <div className="flex items-center justify-between mb-6">
             <div className="flex items-center gap-3">
-              <div className="p-2 bg-gray-50 text-gray-400 rounded-xl">
-                <Clock size={16} />
+              <div className="p-2.5 bg-blue-50 text-[#5551FF] rounded-xl">
+                <Clock size={20} />
               </div>
-              <h3 className="text-[10px] font-black text-gray-900 uppercase tracking-widest">Recent Activity</h3>
+              <h3 className="text-xs font-black text-gray-900 uppercase tracking-widest">Recent Activity</h3>
             </div>
-            <button className="text-[10px] font-black text-gray-400 hover:text-[#5551FF] uppercase tracking-widest transition-colors">View All</button>
+            <button className="text-xs font-black text-[#5551FF] hover:underline uppercase tracking-widest transition-colors">View All</button>
           </div>
 
           <div className="space-y-4">

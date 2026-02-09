@@ -48,23 +48,23 @@ export default function LinkDealButton({
         disabled={loading}
         onClick={handleClick}
         className={`
-          flex items-center gap-1.5 px-3 py-1 rounded-lg text-[11px] font-black uppercase tracking-wider transition-all
+          flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-black uppercase tracking-widest transition-all
           ${loading 
             ? 'bg-gray-100 text-gray-400' 
-            : 'bg-blue-50 text-blue-600 hover:bg-blue-600 hover:text-white shadow-sm border border-blue-100 hover:border-blue-600'
+            : 'bg-[#5551FF]/10 text-[#5551FF] hover:bg-[#5551FF] hover:text-white shadow-sm border border-[#5551FF]/20 hover:border-[#5551FF]'
           }
         `}
       >
         {loading ? (
-          <Loader2 size={12} className="animate-spin" />
+          <Loader2 size={16} className="animate-spin" />
         ) : (
-          <Link2 size={12} />
+          <Link2 size={16} />
         )}
         <span>{loading ? 'Linking' : 'Link Deal'}</span>
       </button>
       {error && (
-        <span className="flex items-center gap-1 text-[10px] text-red-600 font-bold animate-in fade-in" role="alert">
-          <AlertCircle size={10} />
+        <span className="flex items-center gap-1.5 text-[11px] text-red-600 font-black uppercase tracking-widest animate-in fade-in" role="alert">
+          <AlertCircle size={14} />
           {error}
         </span>
       )}

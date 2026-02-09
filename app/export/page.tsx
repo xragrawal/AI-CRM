@@ -56,14 +56,17 @@ export default function ExportPage() {
   return (
     <div className="flex flex-col h-full space-y-8">
       {/* Header */}
-      <div className="space-y-1">
-        <div className="flex items-center gap-2 text-[10px] font-black text-gray-400 uppercase tracking-widest">
+      <div className="space-y-2">
+        <div className="flex items-center gap-3 text-xs font-black text-gray-400 uppercase tracking-widest">
+          <span className="p-1.5 bg-[#5551FF]/10 text-[#5551FF] rounded-lg">
+            <Download size={16} />
+          </span>
           <span>Settings</span>
           <span>/</span>
           <span className="text-gray-900">Export</span>
         </div>
-        <h1 className="text-3xl font-black text-gray-900 tracking-tight">Data Portability</h1>
-        <p className="text-xs font-medium text-gray-400 uppercase tracking-widest">Export your CRM data anytime in structured formats.</p>
+        <h1 className="text-4xl font-black text-gray-900 tracking-tight">Data Portability</h1>
+        <p className="text-sm font-bold text-gray-400 uppercase tracking-widest">Export your CRM data anytime in structured formats.</p>
       </div>
 
       <div className="flex-1 min-h-0">
@@ -73,44 +76,44 @@ export default function ExportPage() {
             <div className="p-10">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
                 <div>
-                  <h2 className="text-xl font-bold text-gray-900 mb-4">Choose Format</h2>
-                  <p className="text-gray-500 text-sm font-medium leading-relaxed mb-8">
+                  <h2 className="text-2xl font-black text-gray-900 mb-6">Choose Format</h2>
+                  <p className="text-gray-500 text-base font-medium leading-relaxed mb-10">
                     Select your preferred format. JSON is best for developers and importing into other systems. Markdown is best for human-readable notes.
                   </p>
 
-                  <div className="space-y-4">
+                  <div className="space-y-6">
                     <button
                       onClick={() => handleExport('json')}
                       disabled={loading}
-                      className="w-full flex items-center justify-between p-5 rounded-2xl border-2 border-gray-50 bg-gray-50 hover:bg-white hover:border-gray-900 transition-all group"
+                      className="w-full flex items-center justify-between p-6 rounded-[32px] border-2 border-gray-50 bg-gray-50 hover:bg-white hover:border-[#5551FF] transition-all group shadow-sm hover:shadow-xl"
                     >
-                      <div className="flex items-center gap-4 text-left">
-                        <div className="p-3 bg-white rounded-xl shadow-sm text-blue-600">
-                          <FileJson size={24} />
+                      <div className="flex items-center gap-5 text-left">
+                        <div className="p-4 bg-white rounded-2xl shadow-sm text-[#5551FF] group-hover:scale-110 transition-transform">
+                          <FileJson size={28} />
                         </div>
                         <div>
-                          <p className="font-bold text-gray-900">Export as JSON</p>
-                          <p className="text-xs text-gray-400 font-bold uppercase tracking-wider">Developer Friendly</p>
+                          <p className="text-lg font-black text-gray-900">Export as JSON</p>
+                          <p className="text-xs text-gray-400 font-black uppercase tracking-widest">Developer Friendly</p>
                         </div>
                       </div>
-                      <Download size={20} className="text-gray-300 group-hover:text-gray-900" />
+                      <Download size={24} className="text-gray-300 group-hover:text-[#5551FF] transition-colors" />
                     </button>
 
                     <button
                       onClick={() => handleExport('markdown')}
                       disabled={loading}
-                      className="w-full flex items-center justify-between p-5 rounded-2xl border-2 border-gray-50 bg-gray-50 hover:bg-white hover:border-gray-900 transition-all group"
+                      className="w-full flex items-center justify-between p-6 rounded-[32px] border-2 border-gray-50 bg-gray-50 hover:bg-white hover:border-[#FF6B6B] transition-all group shadow-sm hover:shadow-xl"
                     >
-                      <div className="flex items-center gap-4 text-left">
-                        <div className="p-3 bg-white rounded-xl shadow-sm text-orange-600">
-                          <FileText size={24} />
+                      <div className="flex items-center gap-5 text-left">
+                        <div className="p-4 bg-white rounded-2xl shadow-sm text-[#FF6B6B] group-hover:scale-110 transition-transform">
+                          <FileText size={28} />
                         </div>
                         <div>
-                          <p className="font-bold text-gray-900">Export as Markdown</p>
-                          <p className="text-xs text-gray-400 font-bold uppercase tracking-wider">Human Readable</p>
+                          <p className="text-lg font-black text-gray-900">Export as Markdown</p>
+                          <p className="text-xs text-gray-400 font-black uppercase tracking-widest">Human Readable</p>
                         </div>
                       </div>
-                      <Download size={20} className="text-gray-300 group-hover:text-gray-900" />
+                      <Download size={24} className="text-gray-300 group-hover:text-[#FF6B6B] transition-colors" />
                     </button>
                   </div>
 
@@ -150,13 +153,13 @@ export default function ExportPage() {
           </div>
 
           {/* Security Note */}
-          <div className="sleek-card rounded-[24px] flex items-center gap-4 px-10 py-6">
-            <div className="p-2 bg-green-50 text-green-600 rounded-lg">
-              <ShieldCheck size={20} />
+          <div className="sleek-card rounded-[32px] flex items-center gap-6 px-10 py-8 shadow-xl shadow-black/5">
+            <div className="p-3 bg-emerald-50 text-emerald-600 rounded-2xl border border-emerald-100 shadow-sm">
+              <ShieldCheck size={28} />
             </div>
             <div>
-              <p className="text-sm font-bold text-gray-900">Your data is safe</p>
-              <p className="text-xs text-gray-500 font-medium">Exports are processed locally and securely. No data leaves your control.</p>
+              <p className="text-base font-black text-gray-900 uppercase tracking-tight">Your data is safe</p>
+              <p className="text-sm text-gray-500 font-bold leading-relaxed">Exports are processed locally and securely. No data leaves your control.</p>
             </div>
           </div>
         </div>

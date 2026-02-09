@@ -127,33 +127,33 @@ export default function ChatInterface({ aiProvider }: ChatInterfaceProps) {
 
       {/* Header */}
       <div className="px-8 py-6 flex items-center justify-between border-b border-white/5 bg-black/20 backdrop-blur-md relative z-10">
-        <div className="flex items-center gap-3">
-          <div className="p-2 bg-blue-600 rounded-xl shadow-lg shadow-blue-500/20">
-            <Bot size={18} className="text-white" />
+        <div className="flex items-center gap-4">
+          <div className="p-2.5 bg-blue-600 rounded-xl shadow-lg shadow-blue-500/20">
+            <Bot size={24} className="text-white" />
           </div>
           <div>
-            <h3 className="text-sm font-black text-white uppercase tracking-widest leading-none mb-1">AI Assistant</h3>
-            <div className="flex items-center gap-1.5">
-              <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-              <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">{aiProvider} Active</span>
+            <h3 className="text-base font-black text-white uppercase tracking-widest leading-none mb-1.5">AI Assistant</h3>
+            <div className="flex items-center gap-2">
+              <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse shadow-[0_0_8px_rgba(16,185,129,0.6)]" />
+              <span className="text-[11px] font-black text-gray-400 uppercase tracking-[0.15em]">{aiProvider} Active</span>
             </div>
           </div>
         </div>
-        <button className="p-2 text-gray-500 hover:text-white transition-colors">
-          <Settings size={18} />
+        <button className="p-2.5 text-gray-500 hover:text-white transition-all hover:bg-white/5 rounded-xl">
+          <Settings size={24} />
         </button>
       </div>
 
       {/* Messages */}
       <div className="flex-1 overflow-y-auto p-8 space-y-8 relative z-10 scrollbar-hide">
         {messages.length === 0 && (
-          <div className="flex flex-col items-center justify-center h-full text-center space-y-6 opacity-60">
-            <div className="w-20 h-20 bg-white/5 rounded-[30px] flex items-center justify-center border border-white/10">
-              <Sparkles size={40} className="text-gray-400" />
+          <div className="flex flex-col items-center justify-center h-full text-center space-y-8 opacity-60">
+            <div className="w-24 h-24 bg-white/5 rounded-[36px] flex items-center justify-center border border-white/10 shadow-inner">
+              <Sparkles size={48} className="text-[#5551FF]" />
             </div>
-            <div className="space-y-2">
-              <p className="text-xs font-black text-white uppercase tracking-[0.2em]">Neural Link Established</p>
-              <p className="text-sm font-medium text-gray-500 max-w-[240px] leading-relaxed">
+            <div className="space-y-3">
+              <p className="text-sm font-black text-white uppercase tracking-[0.3em]">Neural Link Established</p>
+              <p className="text-base font-bold text-gray-500 max-w-[280px] leading-relaxed uppercase tracking-tight">
                 Capture insights, analyze trends, or verify CRM records with AI assistance.
               </p>
             </div>
@@ -163,21 +163,21 @@ export default function ChatInterface({ aiProvider }: ChatInterfaceProps) {
         {messages.map((msg, idx) => (
           <div
             key={idx}
-            className={`flex flex-col ${msg.role === 'user' ? 'items-end' : 'items-start'} space-y-3`}
+            className={`flex flex-col ${msg.role === 'user' ? 'items-end' : 'items-start'} space-y-4`}
           >
-            <div className={`flex items-center gap-3 px-1 ${msg.role === 'user' ? 'flex-row-reverse' : ''}`}>
-              <div className={`w-6 h-6 rounded-lg flex items-center justify-center shadow-sm ${
-                msg.role === 'assistant' ? 'bg-blue-600 text-white' : 'bg-white/10 text-white border border-white/10'
+            <div className={`flex items-center gap-4 px-1 ${msg.role === 'user' ? 'flex-row-reverse' : ''}`}>
+              <div className={`w-8 h-8 rounded-xl flex items-center justify-center shadow-lg ${
+                msg.role === 'assistant' ? 'bg-[#5551FF] text-white' : 'bg-white/10 text-white border border-white/10'
               }`}>
-                {msg.role === 'assistant' ? <Bot size={14} /> : <UserIcon size={14} />}
+                {msg.role === 'assistant' ? <Bot size={18} /> : <UserIcon size={18} />}
               </div>
-              <span className="text-[10px] font-black text-gray-500 uppercase tracking-widest">
+              <span className="text-[11px] font-black text-gray-500 uppercase tracking-[0.2em]">
                 {msg.role === 'assistant' ? 'Assistant' : 'Operator'}
               </span>
             </div>
             
             <div
-              className={`max-w-[85%] rounded-[24px] px-6 py-4 text-sm leading-relaxed shadow-xl transition-all ${
+              className={`max-w-[85%] rounded-[32px] px-8 py-6 text-base leading-relaxed shadow-2xl transition-all ${
                 msg.role === 'user'
                   ? 'bg-[#5551FF] text-white font-bold'
                   : 'bg-white/5 border border-white/10 text-white backdrop-blur-md'
@@ -185,11 +185,11 @@ export default function ChatInterface({ aiProvider }: ChatInterfaceProps) {
             >
               <p className="whitespace-pre-wrap">{msg.content}</p>
               {msg.intent && msg.intent !== 'chat' && (
-                <div className="mt-4 pt-3 border-t border-white/5 flex items-center gap-2">
-                  <span className={`px-2 py-0.5 rounded-full text-[9px] font-black uppercase tracking-widest ${
-                    msg.intent === 'capture' ? 'bg-emerald-500/10 text-emerald-400' : 'bg-blue-500/10 text-blue-400'
+                <div className="mt-6 pt-4 border-t border-white/5 flex items-center gap-3">
+                  <span className={`px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest border border-white/10 ${
+                    msg.intent === 'capture' ? 'bg-emerald-500/20 text-emerald-400 border-emerald-500/20' : 'bg-[#5551FF]/20 text-[#5551FF] border-[#5551FF]/20'
                   }`}>
-                    {msg.intent}
+                    {msg.intent} action
                   </span>
                 </div>
               )}
@@ -222,15 +222,15 @@ export default function ChatInterface({ aiProvider }: ChatInterfaceProps) {
           )}
 
           {(file || url) && (
-            <div className="flex items-center gap-3 p-3 bg-white/5 border border-white/10 rounded-2xl animate-in fade-in zoom-in duration-200">
-              <div className="p-1.5 bg-blue-500/20 text-blue-400 rounded-lg">
-                {file ? <FileIcon size={14} /> : <Link2 size={14} />}
+            <div className="flex items-center gap-4 p-4 bg-white/5 border border-white/10 rounded-[24px] animate-in fade-in zoom-in duration-200 shadow-inner">
+              <div className="p-2.5 bg-[#5551FF]/20 text-[#5551FF] rounded-xl border border-[#5551FF]/20">
+                {file ? <FileIcon size={18} /> : <Link2 size={18} />}
               </div>
-              <span className="text-[11px] font-bold text-gray-300 truncate flex-1">
+              <span className="text-xs font-black text-gray-300 truncate flex-1 uppercase tracking-widest">
                 {file ? file.name : url}
               </span>
-              <button onClick={() => { setFile(null); setUrl(''); }} className="p-1.5 hover:bg-white/10 rounded-lg text-gray-500 hover:text-white transition-colors">
-                <X size={14} />
+              <button onClick={() => { setFile(null); setUrl(''); }} className="p-2 hover:bg-white/10 rounded-xl text-gray-500 hover:text-red-400 transition-all">
+                <X size={18} />
               </button>
             </div>
           )}
@@ -250,23 +250,23 @@ export default function ChatInterface({ aiProvider }: ChatInterfaceProps) {
               disabled={loading}
             />
             
-            <div className="absolute right-3 bottom-3 flex items-center gap-2">
+            <div className="absolute right-4 bottom-4 flex items-center gap-3">
               <button
                 type="button"
                 onClick={() => setShowInputOptions(!showInputOptions)}
-                className={`p-2.5 rounded-2xl transition-all ${
-                  showInputOptions ? 'bg-[#5551FF] text-white shadow-lg shadow-blue-500/20' : 'bg-white/5 text-gray-500 hover:text-white border border-white/10'
+                className={`p-3 rounded-2xl transition-all shadow-lg ${
+                  showInputOptions ? 'bg-[#5551FF] text-white shadow-[#5551FF]/30' : 'bg-white/5 text-gray-500 hover:text-white border border-white/10'
                 }`}
               >
-                <Plus size={18} />
+                <Plus size={22} />
               </button>
               
               <button
                 type="submit"
                 disabled={loading || (!input.trim() && !file && !url)}
-                className="p-2.5 bg-white text-black rounded-2xl hover:bg-gray-200 disabled:opacity-20 transition-all shadow-xl"
+                className="p-3 bg-white text-black rounded-2xl hover:bg-gray-200 disabled:opacity-20 transition-all shadow-xl hover:scale-[1.05] active:scale-[0.95]"
               >
-                <ArrowRight size={18} />
+                <ArrowRight size={22} />
               </button>
             </div>
 
@@ -275,18 +275,18 @@ export default function ChatInterface({ aiProvider }: ChatInterfaceProps) {
                 <button
                   type="button"
                   onClick={() => { fileInputRef.current?.click(); setShowInputOptions(false); }}
-                  className="flex items-center gap-3 px-4 py-3 w-full hover:bg-white/5 rounded-2xl transition-colors text-gray-400 hover:text-white group"
+                  className="flex items-center gap-4 px-5 py-4 w-full hover:bg-white/5 rounded-2xl transition-all text-gray-400 hover:text-white group"
                 >
-                  <Upload size={16} className="group-hover:text-blue-400" />
-                  <span className="text-[11px] font-bold uppercase tracking-widest">File</span>
+                  <Upload size={20} className="group-hover:text-[#5551FF] transition-colors" />
+                  <span className="text-xs font-black uppercase tracking-[0.2em]">File</span>
                 </button>
                 <button
                   type="button"
                   onClick={() => { const newUrl = prompt('Endpoint URL:'); if (newUrl) setUrl(newUrl); setShowInputOptions(false); }}
-                  className="flex items-center gap-3 px-4 py-3 w-full hover:bg-white/5 rounded-2xl transition-colors text-gray-400 hover:text-white group"
+                  className="flex items-center gap-4 px-5 py-4 w-full hover:bg-white/5 rounded-2xl transition-all text-gray-400 hover:text-white group"
                 >
-                  <Link2 size={16} className="group-hover:text-blue-400" />
-                  <span className="text-[11px] font-bold uppercase tracking-widest">URL</span>
+                  <Link2 size={20} className="group-hover:text-[#5551FF] transition-colors" />
+                  <span className="text-xs font-black uppercase tracking-[0.2em]">URL</span>
                 </button>
               </div>
             )}

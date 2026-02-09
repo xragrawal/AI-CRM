@@ -158,12 +158,12 @@ export default function ItemReviewUI({
   )
 
   const SectionHeader = ({ icon: Icon, title, badge }: { icon: any, title: string, badge?: React.ReactNode }) => (
-    <div className="flex items-center justify-between mb-10">
-      <div className="flex items-center gap-4">
-        <div className="p-2.5 bg-gray-50 text-gray-400 rounded-2xl">
-          <Icon size={18} />
+    <div className="flex items-center justify-between mb-6">
+      <div className="flex items-center gap-3">
+        <div className="p-2.5 bg-[#5551FF]/10 text-[#5551FF] rounded-xl border border-[#5551FF]/10">
+          <Icon size={20} />
         </div>
-        <h2 className="text-[11px] font-black text-gray-900 uppercase tracking-[0.2em]">{title}</h2>
+        <h2 className="text-xs font-black text-gray-900 uppercase tracking-[0.2em]">{title}</h2>
         {badge}
       </div>
     </div>
@@ -174,12 +174,12 @@ export default function ItemReviewUI({
       {/* Proposed Updates Section */}
       {(mode === 'all' || mode === 'proposed') && (
         <div className="flex flex-col h-full">
-          <section className="sleek-card p-12 rounded-[40px] flex-1 flex flex-col overflow-hidden shadow-2xl shadow-black/5">
+          <section className="sleek-card p-6 sm:p-8 rounded-[40px] flex-1 flex flex-col overflow-hidden shadow-2xl shadow-black/5">
             <SectionHeader icon={Zap} title="Proposed Updates" />
 
             <form
               id={formId}
-              className="space-y-8 overflow-y-auto flex-1 pr-4 scrollbar-hide"
+              className="space-y-6 overflow-y-auto flex-1 pr-4 scrollbar-hide pb-2"
               onSubmit={(e) => {
                 e.preventDefault()
                 handleApprove('edit_approve')
@@ -196,13 +196,13 @@ export default function ItemReviewUI({
                 <div>
                   <InputLabel label="Organization" />
                   <div className="relative group">
-                    <Building2 className="absolute left-5 top-1/2 -translate-y-1/2 text-gray-300 group-focus-within:text-[#5551FF] transition-colors" size={18} />
+                    <Building2 className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-300 group-focus-within:text-[#5551FF] transition-colors" size={18} />
                     <input 
                       type="text" 
                       value={orgName}
                       onChange={(e) => setOrgName(e.target.value)}
                       disabled={loading}
-                      className="w-full pl-14 pr-6 py-4 bg-gray-50/50 border-none rounded-[24px] text-sm font-bold text-gray-900 outline-none focus:ring-2 focus:ring-[#5551FF]/10 focus:bg-white transition-all placeholder:text-gray-300 shadow-[0_4px_20px_rgb(0,0,0,0.02)]"
+                      className="w-full pl-12 pr-4 py-3 bg-gray-50/50 border-none rounded-[20px] text-sm font-bold text-gray-900 outline-none focus:ring-2 focus:ring-[#5551FF]/10 focus:bg-white transition-all placeholder:text-gray-300 shadow-[0_4px_20px_rgb(0,0,0,0.02)]"
                       placeholder="Company name..."
                     />
                   </div>
@@ -211,13 +211,13 @@ export default function ItemReviewUI({
                 <div>
                   <InputLabel label="Deal Name" />
                   <div className="relative group">
-                    <FileText className="absolute left-5 top-1/2 -translate-y-1/2 text-gray-300 group-focus-within:text-[#5551FF] transition-colors" size={18} />
+                    <FileText className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-300 group-focus-within:text-[#5551FF] transition-colors" size={18} />
                     <input 
                       type="text" 
                       value={dealName}
                       onChange={(e) => setDealName(e.target.value)}
                       disabled={loading}
-                      className="w-full pl-14 pr-6 py-4 bg-gray-50/50 border-none rounded-[24px] text-sm font-bold text-gray-900 outline-none focus:ring-2 focus:ring-[#5551FF]/10 focus:bg-white transition-all placeholder:text-gray-300 shadow-[0_4px_20px_rgb(0,0,0,0.02)]"
+                      className="w-full pl-12 pr-4 py-3 bg-gray-50/50 border-none rounded-[20px] text-sm font-bold text-gray-900 outline-none focus:ring-2 focus:ring-[#5551FF]/10 focus:bg-white transition-all placeholder:text-gray-300 shadow-[0_4px_20px_rgb(0,0,0,0.02)]"
                       placeholder="Project/Deal name..."
                     />
                   </div>
@@ -226,14 +226,14 @@ export default function ItemReviewUI({
 
               <div>
                 <InputLabel label="Service Tags" />
-                <div className="flex flex-wrap gap-3">
+                <div className="flex flex-wrap gap-2">
                   {AVAILABLE_PRODUCT_TAGS.map(tag => (
                     <button
                       key={tag}
                       type="button"
                       onClick={() => toggleTag(tag)}
                       disabled={loading}
-                      className={`px-6 py-3 rounded-2xl text-[11px] font-black uppercase tracking-widest border-none transition-all ${
+                      className={`px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest border-none transition-all ${
                         productTags.includes(tag)
                           ? 'bg-[#5551FF] text-white shadow-lg shadow-[#5551FF]/20 scale-[1.02]'
                           : 'bg-gray-50 text-gray-400 hover:text-gray-600 hover:bg-gray-100'
@@ -247,15 +247,15 @@ export default function ItemReviewUI({
 
               <div>
                 <InputLabel label="Primary Contact" />
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <div className="relative group">
-                    <User className="absolute left-5 top-1/2 -translate-y-1/2 text-gray-300 group-focus-within:text-[#5551FF] transition-colors" size={18} />
+                    <User className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-300 group-focus-within:text-[#5551FF] transition-colors" size={18} />
                     <input
                       type="text"
                       value={contactName}
                       onChange={(e) => setContactName(e.target.value)}
                       disabled={loading}
-                      className="w-full pl-14 pr-6 py-4 bg-gray-50/50 border-none rounded-[24px] text-sm font-bold text-gray-900 outline-none focus:ring-2 focus:ring-[#5551FF]/10 focus:bg-white transition-all placeholder:text-gray-300 shadow-[0_4px_20px_rgb(0,0,0,0.02)]"
+                      className="w-full pl-12 pr-4 py-3 bg-gray-50/50 border-none rounded-[20px] text-sm font-bold text-gray-900 outline-none focus:ring-2 focus:ring-[#5551FF]/10 focus:bg-white transition-all placeholder:text-gray-300 shadow-[0_4px_20px_rgb(0,0,0,0.02)]"
                       placeholder="Name..."
                     />
                   </div>
@@ -264,21 +264,21 @@ export default function ItemReviewUI({
                     value={contactRole}
                     onChange={(e) => setContactRole(e.target.value)}
                     disabled={loading}
-                    className="w-full px-6 py-4 bg-gray-50/50 border-none rounded-[24px] text-sm font-bold text-gray-900 outline-none focus:ring-2 focus:ring-[#5551FF]/10 focus:bg-white transition-all placeholder:text-gray-300 shadow-[0_4px_20px_rgb(0,0,0,0.02)]"
+                    className="w-full px-5 py-3 bg-gray-50/50 border-none rounded-[20px] text-sm font-bold text-gray-900 outline-none focus:ring-2 focus:ring-[#5551FF]/10 focus:bg-white transition-all placeholder:text-gray-300 shadow-[0_4px_20px_rgb(0,0,0,0.02)]"
                     placeholder="Role (e.g. POC)"
                   />
                 </div>
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                 <div>
                   <InputLabel label="Key Decision" />
                   <textarea 
                     value={lastDecision}
                     onChange={(e) => setLastDecision(e.target.value)}
                     disabled={loading}
-                    rows={2}
-                    className="w-full px-6 py-4 bg-gray-50/50 border-none rounded-[24px] text-sm font-bold text-gray-900 outline-none focus:ring-2 focus:ring-[#5551FF]/10 focus:bg-white transition-all resize-none placeholder:text-gray-300 shadow-[0_4px_20px_rgb(0,0,0,0.02)]"
+                    rows={3}
+                    className="w-full px-5 py-3 bg-gray-50/50 border-none rounded-[20px] text-sm font-bold text-gray-900 outline-none focus:ring-2 focus:ring-[#5551FF]/10 focus:bg-white transition-all resize-none placeholder:text-gray-300 shadow-[0_4px_20px_rgb(0,0,0,0.02)]"
                     placeholder="What was agreed?"
                   />
                 </div>
@@ -289,8 +289,8 @@ export default function ItemReviewUI({
                     value={nextStep}
                     onChange={(e) => setNextStep(e.target.value)}
                     disabled={loading}
-                    rows={2}
-                    className="w-full px-6 py-4 bg-gray-50/50 border-none rounded-[24px] text-sm font-bold text-gray-900 outline-none focus:ring-2 focus:ring-[#5551FF]/10 focus:bg-white transition-all resize-none placeholder:text-gray-300 shadow-[0_4px_20px_rgb(0,0,0,0.02)]"
+                    rows={3}
+                    className="w-full px-5 py-3 bg-gray-50/50 border-none rounded-[20px] text-sm font-bold text-gray-900 outline-none focus:ring-2 focus:ring-[#5551FF]/10 focus:bg-white transition-all resize-none placeholder:text-gray-300 shadow-[0_4px_20px_rgb(0,0,0,0.02)]"
                     placeholder="What follows?"
                   />
                 </div>
@@ -302,8 +302,8 @@ export default function ItemReviewUI({
                   value={summary}
                   onChange={(e) => setSummary(e.target.value)}
                   disabled={loading}
-                  rows={3}
-                  className="w-full px-6 py-4 bg-gray-50/50 border-none rounded-[24px] text-sm font-bold text-gray-900 outline-none focus:ring-2 focus:ring-[#5551FF]/10 focus:bg-white transition-all resize-none placeholder:text-gray-300 shadow-[0_4px_20px_rgb(0,0,0,0.02)]"
+                  rows={4}
+                  className="w-full px-5 py-3 bg-gray-50/50 border-none rounded-[20px] text-sm font-bold text-gray-900 outline-none focus:ring-2 focus:ring-[#5551FF]/10 focus:bg-white transition-all resize-none placeholder:text-gray-300 shadow-[0_4px_20px_rgb(0,0,0,0.02)]"
                   placeholder="Key takeaways..."
                 />
               </div>
@@ -322,53 +322,53 @@ export default function ItemReviewUI({
       {/* Entity Matching Section */}
       {(mode === 'all' || mode === 'matching') && (
         <div className="flex flex-col h-full">
-          <section className="sleek-card p-12 rounded-[40px] flex flex-col h-full overflow-hidden shadow-2xl shadow-black/5">
+          <section className="sleek-card p-6 sm:p-8 rounded-[40px] flex flex-col h-full overflow-hidden shadow-2xl shadow-black/5">
             <SectionHeader 
               icon={Zap} 
               title="Entity Matching" 
               badge={
-                <span className="px-3 py-1 bg-gray-50 text-gray-400 rounded-full text-[10px] font-black uppercase tracking-widest border border-gray-100">
+                <span className="px-3 py-1 bg-gray-50 text-gray-400 rounded-full text-[9px] font-black uppercase tracking-widest border border-gray-100">
                   {initialProposal.candidates.length} Detected
                 </span>
               }
             />
             
-            <div className="flex-1 space-y-5 overflow-y-auto min-h-0 pr-4 scrollbar-hide">
+            <div className="flex-1 space-y-4 overflow-y-auto min-h-0 pr-4 scrollbar-hide">
               {initialProposal.candidates.length === 0 ? (
-                <div className="flex flex-col items-center justify-center py-24 text-center">
-                  <div className="w-20 h-20 bg-gray-50 rounded-[32px] flex items-center justify-center mb-8 border border-gray-100/50">
-                    <Zap size={32} className="text-gray-200" />
+                <div className="flex flex-col items-center justify-center py-16 text-center">
+                  <div className="w-16 h-16 bg-gray-50 rounded-[28px] flex items-center justify-center mb-6 border border-gray-100/50">
+                    <Zap size={28} className="text-gray-200" />
                   </div>
-                  <h3 className="text-[11px] font-black text-gray-400 uppercase tracking-[0.2em] mb-3">No matching entities</h3>
-                  <p className="text-xs text-gray-300 font-bold max-w-[240px] leading-relaxed uppercase tracking-tight">
+                  <h3 className="text-[10px] font-black text-gray-400 uppercase tracking-[0.2em] mb-2">No matching entities</h3>
+                  <p className="text-[10px] text-gray-300 font-bold max-w-[200px] leading-relaxed uppercase tracking-tight">
                     A fresh CRM record will be initialized.
                   </p>
                 </div>
               ) : (
-                <div className="space-y-4">
+                <div className="space-y-3">
                   {initialProposal.candidates.map((c) => (
                     <div 
                       key={c.dealId}
                       onClick={() => setSelectedDealId(c.dealId)}
-                      className={`group p-8 rounded-[32px] border-none transition-all cursor-pointer ${
+                      className={`group p-6 rounded-[28px] border-none transition-all cursor-pointer ${
                         selectedDealId === c.dealId 
-                          ? 'bg-[#5551FF]/5 ring-2 ring-[#5551FF] shadow-2xl scale-[1.02]' 
+                          ? 'bg-[#5551FF]/5 ring-2 ring-[#5551FF] shadow-2xl scale-[1.01]' 
                           : 'bg-gray-50/50 hover:bg-white hover:shadow-2xl transition-all'
                       }`}
                     >
-                      <div className="flex justify-between items-start gap-6">
+                      <div className="flex justify-between items-start gap-4">
                         <div className="min-w-0 flex-1">
-                          <div className="flex flex-wrap items-center gap-3 mb-4">
-                            <span className="text-[10px] font-black text-[#5551FF] uppercase tracking-widest bg-[#5551FF]/5 px-3 py-1 rounded-full border border-[#5551FF]/10">
+                          <div className="flex flex-wrap items-center gap-2 mb-3">
+                            <span className="text-[9px] font-black text-[#5551FF] uppercase tracking-widest bg-[#5551FF]/5 px-2 py-0.5 rounded-full border border-[#5551FF]/10">
                               {c.organizationName || 'No Org'}
                             </span>
-                            <span className={`text-[10px] font-black uppercase tracking-widest px-3 py-1 rounded-full ${
+                            <span className={`text-[9px] font-black uppercase tracking-widest px-2 py-0.5 rounded-full ${
                               c.confidence > 0.8 ? 'bg-emerald-50 text-emerald-600' : 'bg-amber-50 text-amber-600'
                             }`}>
                               {(c.confidence * 100).toFixed(0)}% Match
                             </span>
                           </div>
-                          <h3 className="font-black text-gray-900 truncate text-base tracking-tight">{c.dealName}</h3>
+                          <h3 className="font-black text-gray-900 truncate text-sm tracking-tight">{c.dealName}</h3>
                         </div>
                         <div className={`p-2 rounded-full transition-all ${
                           selectedDealId === c.dealId ? 'bg-[#5551FF] text-white shadow-lg' : 'bg-white text-gray-200 border border-gray-100 shadow-sm'

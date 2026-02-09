@@ -52,9 +52,14 @@ export default function InboxPage() {
   return (
     <div className="flex flex-col h-full space-y-6">
       <div className="flex items-center justify-between">
-        <div className="space-y-1">
-          <h2 className="text-2xl font-black text-gray-900 tracking-tight">Inbox</h2>
-          <p className="text-xs font-medium text-gray-400 uppercase tracking-widest">
+        <div className="flex flex-col gap-1">
+          <div className="flex items-center gap-2">
+            <div className="p-1.5 bg-[#5551FF]/10 text-[#5551FF] rounded-lg">
+              <Inbox size={24} />
+            </div>
+            <h2 className="text-3xl font-black text-gray-900 tracking-tight">Inbox</h2>
+          </div>
+          <p className="text-sm font-bold text-gray-400 uppercase tracking-widest">
             {filteredItems.length} deferred items awaiting processing
           </p>
         </div>
@@ -62,17 +67,17 @@ export default function InboxPage() {
 
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div className="relative group flex-1 max-w-md">
-          <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-300 group-focus-within:text-blue-500 transition-colors" size={16} />
+          <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-300 group-focus-within:text-[#5551FF] transition-colors" size={20} />
           <input 
             type="text"
             placeholder="Search inbox..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full pl-10 pr-4 py-2.5 bg-white border border-gray-100 rounded-xl text-xs font-medium focus:outline-none focus:ring-4 focus:ring-blue-500/5 focus:border-blue-500 transition-all shadow-sm"
+            className="w-full pl-12 pr-4 py-3 bg-white border border-gray-100 rounded-2xl text-sm font-bold focus:outline-none focus:ring-4 focus:ring-[#5551FF]/5 focus:border-[#5551FF] transition-all shadow-sm"
           />
         </div>
-        <button className="flex items-center gap-2 px-4 py-2.5 bg-white border border-gray-100 rounded-xl text-[10px] font-black text-gray-500 uppercase tracking-widest hover:border-gray-200 transition-all shadow-sm">
-          <Filter size={14} />
+        <button className="flex items-center gap-3 px-5 py-3 bg-white border border-gray-100 rounded-2xl text-[11px] font-black text-gray-500 uppercase tracking-widest hover:border-gray-200 transition-all shadow-sm">
+          <Filter size={18} />
           <span>Filter</span>
         </button>
       </div>
@@ -99,29 +104,29 @@ export default function InboxPage() {
                 href={`/items/${item.id}`}
                 className="group flex items-center justify-between p-5 bg-white border border-gray-100 rounded-2xl hover:border-blue-100 hover:shadow-md transition-all duration-300"
               >
-                <div className="flex items-start gap-5 flex-1 min-w-0">
-                  <div className="mt-1 p-2.5 bg-gray-50 text-gray-400 rounded-xl group-hover:bg-blue-50 group-hover:text-blue-600 transition-colors border border-transparent group-hover:border-blue-100">
-                    <MessageSquare size={18} />
+                <div className="flex items-start gap-6 flex-1 min-w-0">
+                  <div className="mt-1 p-3 bg-white border border-gray-100 text-[#5551FF]/60 rounded-2xl group-hover:bg-[#5551FF] group-hover:text-white transition-all shadow-sm">
+                    <MessageSquare size={22} />
                   </div>
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-3 mb-1.5">
-                      <span className="text-[10px] font-black text-gray-400 uppercase tracking-tighter bg-gray-50 px-1.5 py-0.5 rounded border border-gray-100/50">
+                  <div className="flex-1 min-w-0 pt-1">
+                    <div className="flex items-center gap-4 mb-2">
+                      <span className="text-[11px] font-black text-[#5551FF] uppercase tracking-widest bg-[#5551FF]/5 px-2 py-0.5 rounded border border-[#5551FF]/10">
                         Deferred Entry
                       </span>
-                      <div className="flex items-center gap-1 text-[10px] font-bold text-gray-300 uppercase tracking-tight">
-                        <Clock size={10} />
+                      <div className="flex items-center gap-2 text-[11px] font-bold text-gray-400 uppercase tracking-widest">
+                        <Clock size={12} />
                         <span>{formatShortDate(item.createdAt)}</span>
                       </div>
                     </div>
-                    <p className="text-xs text-gray-600 font-medium leading-relaxed line-clamp-2 pr-10">
+                    <p className="text-sm text-gray-700 font-bold leading-relaxed line-clamp-2 pr-10">
                       {item.rawText}
                     </p>
                   </div>
                 </div>
                 
-                <div className="flex items-center gap-2">
-                  <div className="p-2 text-gray-200 group-hover:text-blue-500 transition-colors">
-                    <ArrowUpRight size={18} />
+                <div className="flex items-center gap-3">
+                  <div className="p-2 text-gray-300 group-hover:text-[#5551FF] transition-all">
+                    <ArrowUpRight size={22} />
                   </div>
                 </div>
               </Link>

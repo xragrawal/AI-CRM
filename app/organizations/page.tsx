@@ -40,29 +40,34 @@ export default function OrganizationsPage() {
   return (
     <div className="flex flex-col h-full space-y-6">
       <div className="flex items-center justify-between">
-        <div className="space-y-1">
-          <h2 className="text-2xl font-black text-gray-900 tracking-tight">Companies</h2>
-          <p className="text-xs font-medium text-gray-400 uppercase tracking-widest">Managing {filteredOrgs.length} partner organizations</p>
+        <div className="flex flex-col gap-1">
+          <div className="flex items-center gap-2">
+            <div className="p-1.5 bg-[#5551FF]/10 text-[#5551FF] rounded-lg">
+              <Building2 size={24} />
+            </div>
+            <h2 className="text-3xl font-black text-gray-900 tracking-tight">Companies</h2>
+          </div>
+          <p className="text-sm font-bold text-gray-400 uppercase tracking-widest">Managing {filteredOrgs.length} partner organizations</p>
         </div>
-        <button className="flex items-center gap-2 px-4 py-2.5 bg-gray-900 text-white rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-gray-800 transition-all shadow-md">
-          <Plus size={14} />
+        <button className="flex items-center gap-3 px-6 py-3 bg-gray-900 text-white rounded-2xl text-xs font-black uppercase tracking-widest hover:bg-gray-800 transition-all shadow-md">
+          <Plus size={18} />
           <span>New Company</span>
         </button>
       </div>
 
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div className="relative group flex-1 max-w-md">
-          <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-300 group-focus-within:text-blue-500 transition-colors" size={16} />
+          <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-300 group-focus-within:text-[#5551FF] transition-colors" size={20} />
           <input 
             type="text"
             placeholder="Search companies..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full pl-10 pr-4 py-2.5 bg-white border border-gray-100 rounded-xl text-xs font-medium focus:outline-none focus:ring-4 focus:ring-blue-500/5 focus:border-blue-500 transition-all shadow-sm"
+            className="w-full pl-12 pr-4 py-3 bg-white border border-gray-100 rounded-2xl text-sm font-bold focus:outline-none focus:ring-4 focus:ring-[#5551FF]/5 focus:border-[#5551FF] transition-all shadow-sm"
           />
         </div>
-        <button className="flex items-center gap-2 px-4 py-2.5 bg-white border border-gray-100 rounded-xl text-[10px] font-black text-gray-500 uppercase tracking-widest hover:border-gray-200 transition-all shadow-sm">
-          <Filter size={14} />
+        <button className="flex items-center gap-3 px-5 py-3 bg-white border border-gray-100 rounded-2xl text-[11px] font-black text-gray-500 uppercase tracking-widest hover:border-gray-200 transition-all shadow-sm">
+          <Filter size={18} />
           <span>Filter</span>
         </button>
       </div>
@@ -93,29 +98,29 @@ export default function OrganizationsPage() {
                   {filteredOrgs.map((org) => (
                     <tr key={org.id} className="group hover:bg-blue-50/30 transition-colors">
                       <td className="px-6 py-5">
-                        <Link href={`/organizations/${org.id}`} className="flex items-center gap-3">
-                          <div className="w-8 h-8 rounded-lg bg-gray-100 flex items-center justify-center text-gray-400 group-hover:bg-white group-hover:shadow-sm transition-all border border-transparent group-hover:border-gray-100">
-                            <Building2 size={16} />
+                        <Link href={`/organizations/${org.id}`} className="flex items-center gap-4">
+                          <div className="w-10 h-10 rounded-xl bg-gray-100 flex items-center justify-center text-[#5551FF]/60 group-hover:bg-white group-hover:shadow-sm transition-all border border-transparent group-hover:border-gray-100">
+                            <Building2 size={20} />
                           </div>
-                          <span className="font-bold text-gray-900 text-sm group-hover:text-blue-600 transition-colors">
+                          <span className="font-bold text-gray-900 text-sm group-hover:text-[#5551FF] transition-colors">
                             {org.name}
                           </span>
                         </Link>
                       </td>
                       <td className="px-6 py-5">
-                        <p className="text-xs text-gray-500 font-medium truncate max-w-xs">
+                        <p className="text-xs text-gray-500 font-bold truncate max-w-xs uppercase tracking-tight">
                           {org.rollingSummary || 'No summary available'}
                         </p>
                       </td>
                       <td className="px-6 py-5">
-                        <div className="flex items-center gap-3">
-                          <div className="flex items-center gap-1.5 px-2 py-1 bg-emerald-50 rounded-md border border-emerald-100/50">
-                            <Zap size={10} className="text-emerald-600" />
-                            <span className="text-[10px] font-black text-emerald-700">{org._count?.deals || 0}</span>
+                        <div className="flex items-center gap-4">
+                          <div className="flex items-center gap-2 px-3 py-1.5 bg-emerald-50 rounded-lg border border-emerald-100/50">
+                            <Zap size={14} className="text-emerald-600" />
+                            <span className="text-xs font-black text-emerald-700">{org._count?.deals || 0}</span>
                           </div>
-                          <div className="flex items-center gap-1.5 px-2 py-1 bg-blue-50 rounded-md border border-blue-100/50">
-                            <Users2 size={10} className="text-blue-600" />
-                            <span className="text-[10px] font-black text-blue-700">{org._count?.contacts || 0}</span>
+                          <div className="flex items-center gap-2 px-3 py-1.5 bg-blue-50 rounded-lg border border-blue-100/50">
+                            <Users2 size={14} className="text-blue-600" />
+                            <span className="text-xs font-black text-blue-700">{org._count?.contacts || 0}</span>
                           </div>
                         </div>
                       </td>

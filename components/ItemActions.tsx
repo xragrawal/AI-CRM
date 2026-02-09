@@ -3,6 +3,8 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 
+import { CheckCircle2, XCircle, Clock, ChevronDown } from 'lucide-react'
+
 type Action = 'approve' | 'edit_approve' | 'reject' | 'defer'
 const REJECT_REASONS = ['duplicate', 'invalid'] as const
 
@@ -46,55 +48,61 @@ export default function ItemActions({ itemId }: { itemId: string }) {
   }
 
   return (
-    <div className="flex flex-col gap-3 mt-4 pt-4 border-t border-gray-200">
+    <div className="flex flex-col gap-4 mt-8 pt-8 border-t border-gray-100">
       {error && (
-        <p className="text-sm text-red-600" role="alert">
+        <p className="text-xs font-black text-red-600 uppercase tracking-widest bg-red-50 px-4 py-2 rounded-lg border border-red-100" role="alert">
           {error}
         </p>
       )}
       {successMsg && (
-        <p className="text-sm text-green-600 font-medium" role="status">
+        <p className="text-xs font-black text-emerald-600 uppercase tracking-widest bg-emerald-50 px-4 py-2 rounded-lg border border-emerald-100" role="status">
           {successMsg}
         </p>
       )}
-      <div className="flex flex-wrap gap-3 items-center">
+      <div className="flex flex-wrap gap-4 items-center">
         <button
           type="button"
           disabled={loading}
           onClick={() => handleAction('approve', {})}
-          className="px-4 py-2 rounded-lg bg-green-600 text-white font-medium hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed"
+          className="flex items-center gap-2 px-6 py-3 rounded-2xl bg-emerald-600 text-white font-black text-[11px] uppercase tracking-widest hover:bg-emerald-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-lg shadow-emerald-600/10"
         >
+          <CheckCircle2 size={18} />
           Approve
         </button>
-        <span className="flex items-center gap-2">
+        <div className="flex items-center gap-0">
           <button
             type="button"
             disabled={loading}
             onClick={() => handleAction('reject', { reason: rejectReason })}
-            className="px-4 py-2 rounded-lg bg-gray-600 text-white font-medium hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed"
+            className="flex items-center gap-2 px-6 py-3 rounded-l-2xl bg-red-600 text-white font-black text-[11px] uppercase tracking-widest hover:bg-red-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-lg shadow-red-600/10 border-r border-red-500/30"
           >
+            <XCircle size={18} />
             Reject
           </button>
-          <select
-            value={rejectReason}
-            onChange={(e) => setRejectReason(e.target.value as (typeof REJECT_REASONS)[number])}
-            className="px-3 py-2 rounded-lg border border-gray-300 text-sm"
-            disabled={loading}
-          >
-            {REJECT_REASONS.map((r) => (
-              <option key={r} value={r}>
-                {r}
-              </option>
-            ))}
-          </select>
-        </span>
+          <div className="relative group">
+            <select
+              value={rejectReason}
+              onChange={(e) => setRejectReason(e.target.value as (typeof REJECT_REASONS)[number])}
+              className="appearance-none pl-4 pr-10 py-3 bg-red-600 text-white font-black text-[11px] uppercase tracking-widest rounded-r-2xl border-none outline-none cursor-pointer hover:bg-red-700 transition-all shadow-lg shadow-red-600/10"
+              disabled={loading}
+            >
+              {REJECT_REASONS.map((r) => (
+                <option key={r} value={r} className="bg-white text-gray-900">
+                  {r}
+                </option>
+              ))}
+            </select>
+            <ChevronDown size={14} className="absolute right-4 top-1/2 -translate-y-1/2 text-white/60 pointer-events-none" />
+          </div>
+        </div>
         <button
           type="button"
           disabled={loading}
           onClick={() => handleAction('defer', {})}
-          className="px-4 py-2 rounded-lg border border-gray-300 text-gray-700 font-medium hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed"
+          className="flex items-center gap-2 px-6 py-3 rounded-2xl bg-white border border-gray-200 text-gray-500 font-black text-[11px] uppercase tracking-widest hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-sm"
         >
-          Defer
+          <Clock size={18} />
+          Defer to Inbox
         </button>
       </div>
     </div>
