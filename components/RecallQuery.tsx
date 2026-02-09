@@ -54,25 +54,25 @@ export default function RecallQuery() {
   return (
     <div className="space-y-4 sm:space-y-6">
       <div className="bg-white rounded-xl sm:rounded-2xl border border-gray-200 shadow-sm overflow-hidden focus-within:ring-2 focus-within:ring-blue-500/20 focus-within:border-blue-500 transition-all">
-        <form onSubmit={handleSubmit} className="flex items-center px-4 sm:px-6 py-2 sm:py-3">
-          <Search className="text-gray-400 mr-3 sm:mr-4" size={22} />
+        <form onSubmit={handleSubmit} className="flex items-center px-6 sm:px-8 py-3 sm:py-4">
+          <Search className="text-[#5551FF] mr-4 sm:mr-6" size={28} />
           <input
             type="text"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             placeholder="Search deals, decisions, or ask a question..."
-            className="flex-1 py-3 sm:py-4 text-gray-900 placeholder-gray-400 focus:outline-none text-base sm:text-lg bg-transparent"
+            className="flex-1 py-4 sm:py-5 text-gray-900 placeholder-gray-400 focus:outline-none text-lg sm:text-xl font-bold bg-transparent"
             disabled={loading}
           />
           <button
             type="submit"
             disabled={loading || !query.trim()}
-            className="ml-3 p-2 sm:p-3 bg-gray-900 text-white rounded-xl sm:rounded-2xl hover:bg-gray-800 disabled:opacity-30 transition-all active:scale-95"
+            className="ml-4 p-3 sm:p-4 bg-gray-900 text-white rounded-2xl hover:bg-gray-800 disabled:opacity-30 transition-all active:scale-95 shadow-lg"
           >
             {loading ? (
-              <Loader2 size={20} className="animate-spin sm:w-6 sm:h-6" />
+              <Loader2 size={28} className="animate-spin" />
             ) : (
-              <MessageSquare size={20} className="sm:w-6 sm:h-6" />
+              <MessageSquare size={28} />
             )}
           </button>
         </form>
@@ -101,10 +101,10 @@ export default function RecallQuery() {
       {response && (
         <div className="bg-white rounded-xl sm:rounded-2xl border border-gray-100 shadow-sm overflow-hidden animate-in fade-in slide-in-from-top-4 duration-500">
           <div className="px-6 sm:px-8 py-4 sm:py-6 border-b border-gray-50 flex items-center gap-3">
-            <div className="p-1.5 bg-blue-50 text-blue-600 rounded-lg">
-              <MessageSquare size={18} className="sm:w-5 sm:h-5" />
+            <div className="p-2 bg-[#5551FF]/10 text-[#5551FF] rounded-xl border border-[#5551FF]/10 shadow-sm">
+              <MessageSquare size={24} />
             </div>
-            <h3 className="text-sm sm:text-base font-bold text-gray-900 uppercase tracking-tight">AI Insights</h3>
+            <h3 className="text-base sm:text-lg font-black text-gray-900 uppercase tracking-widest">AI Insights</h3>
           </div>
           
           <div className="p-6 sm:p-8 space-y-6 sm:space-y-8">
@@ -114,15 +114,18 @@ export default function RecallQuery() {
 
             {response.sources?.length > 0 && (
               <div className="pt-6 sm:pt-8 border-t border-gray-50">
-                <h4 className="text-xs sm:text-sm font-black text-gray-400 uppercase tracking-widest mb-4 sm:mb-6">
+                <h4 className="text-sm sm:text-base font-black text-gray-400 uppercase tracking-widest mb-6 sm:mb-8 flex items-center gap-3">
+                  <Quote size={18} className="text-[#5551FF]/40" />
                   Sources & Evidence
                 </h4>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
                   {response.sources.map((s, i) => (
                     <div key={i} className="group p-4 sm:p-6 bg-gray-50/50 rounded-xl sm:rounded-2xl border border-gray-100 hover:border-blue-100 hover:bg-white transition-all">
-                      <div className="flex items-center gap-2 sm:gap-3 mb-2 sm:mb-3">
-                        <Quote size={16} className="text-blue-400 sm:w-5 sm:h-5" />
-                        <span className="text-xs sm:text-sm font-bold text-gray-900 truncate">{s.dealName}</span>
+                      <div className="flex items-center gap-3 sm:gap-4 mb-3 sm:mb-4">
+                        <div className="p-1.5 bg-white rounded-lg shadow-sm border border-gray-100">
+                          <Quote size={18} className="text-[#5551FF]/60" />
+                        </div>
+                        <span className="text-sm sm:text-base font-black text-gray-900 truncate tracking-tight">{s.dealName}</span>
                       </div>
                       <p className="text-xs sm:text-sm text-gray-500 italic leading-relaxed line-clamp-3">
                         "{s.snippet}"

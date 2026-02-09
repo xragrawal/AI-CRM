@@ -62,46 +62,47 @@ export default function ContactDetailPage() {
 
   return (
     <div className="flex flex-col h-full space-y-8">
-      <div className="space-y-1">
-        <div className="flex items-center gap-2 text-[10px] font-black text-gray-400 uppercase tracking-widest">
-          <Link href="/contacts" className="p-1.5 hover:bg-white rounded-lg transition-all text-gray-400 shadow-sm border border-transparent hover:border-gray-100">
-            <ArrowLeft size={14} />
+      <div className="space-y-2">
+        <div className="flex items-center gap-3 text-xs font-black text-gray-400 uppercase tracking-widest">
+          <Link href="/contacts" className="p-2 hover:bg-white rounded-lg transition-all text-gray-400 shadow-sm border border-transparent hover:border-gray-100">
+            <ArrowLeft size={18} />
           </Link>
           <span>People</span>
           <span>/</span>
           <span className="text-gray-900 truncate max-w-[260px]">{contact.displayName}</span>
         </div>
-        <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-6">
+        <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-6 pt-2">
           <div className="flex items-center gap-6">
-            <div className="w-16 h-16 rounded-[24px] bg-[#5551FF]/10 flex items-center justify-center text-[#5551FF] font-black text-2xl border border-[#5551FF]/10 shadow-sm">
+            <div className="w-20 h-20 rounded-[28px] bg-[#5551FF]/10 flex items-center justify-center text-[#5551FF] font-black text-3xl border border-[#5551FF]/10 shadow-sm">
               {contact.displayName.charAt(0)}
             </div>
             <div>
-              <h1 className="text-3xl font-black text-gray-900 tracking-tight leading-none mb-2">{contact.displayName}</h1>
-              <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-6">
+              <h1 className="text-4xl font-black text-gray-900 tracking-tight leading-none mb-3">{contact.displayName}</h1>
+              <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-8">
                 {contact.organization && (
                   <Link 
                     href={`/organizations/${contact.organization.id}`}
-                    className="flex items-center gap-2 text-xs font-bold text-gray-500 hover:text-[#5551FF] transition-colors"
+                    className="flex items-center gap-2.5 text-sm font-bold text-gray-500 hover:text-[#5551FF] transition-colors"
                   >
-                    <Building2 size={14} className="text-gray-300" />
+                    <Building2 size={18} className="text-[#5551FF]/60" />
                     <span>{contact.organization.name}</span>
                   </Link>
                 )}
-                <div className="hidden sm:block h-4 w-px bg-gray-100" />
-                <div className="flex items-center gap-2 text-xs font-bold text-gray-400 uppercase tracking-tight">
-                  <Clock size={14} className="text-gray-300" />
+                <div className="hidden sm:block h-5 w-px bg-gray-200" />
+                <div className="flex items-center gap-2.5 text-sm font-bold text-gray-400 uppercase tracking-tight">
+                  <Clock size={18} className="text-gray-300" />
                   <span>Last update {new Date(contact.updatedAt).toLocaleDateString([], { month: 'short', day: 'numeric', year: 'numeric' })}</span>
                 </div>
               </div>
             </div>
           </div>
 
-          <div className="flex items-center gap-3">
-            <button className="px-5 py-2.5 bg-white border border-gray-100 rounded-xl text-xs font-black text-gray-500 uppercase tracking-widest hover:border-gray-200 transition-all shadow-sm">
+          <div className="flex items-center gap-4">
+            <button className="px-6 py-3 bg-white border border-gray-100 rounded-2xl text-xs font-black text-gray-500 uppercase tracking-widest hover:border-gray-200 transition-all shadow-sm">
               Edit Profile
             </button>
-            <button className="flex items-center gap-2 px-5 py-2.5 bg-gray-900 text-white rounded-xl text-xs font-black uppercase tracking-widest hover:bg-gray-800 transition-all shadow-md">
+            <button className="flex items-center gap-3 px-6 py-3 bg-gray-900 text-white rounded-2xl text-xs font-black uppercase tracking-widest hover:bg-gray-800 transition-all shadow-md">
+              <MessageSquare size={18} />
               <span>Message</span>
             </button>
           </div>
@@ -115,25 +116,25 @@ export default function ContactDetailPage() {
             {/* About / Intelligence */}
             <section className="sleek-card rounded-[40px]">
               <div className="px-8 py-6 border-b border-gray-50 flex items-center justify-between bg-gray-50/30">
-                <div className="flex items-center gap-2">
-                  <div className="p-1.5 bg-white border border-gray-100 rounded-lg shadow-sm">
-                    <Quote size={14} className="text-gray-400" />
+                <div className="flex items-center gap-3">
+                  <div className="p-2 bg-white border border-gray-100 rounded-xl shadow-sm text-[#5551FF]">
+                    <Quote size={20} />
                   </div>
-                  <h2 className="text-xs font-black text-gray-900 uppercase tracking-widest">Intelligence Summary</h2>
+                  <h2 className="text-sm font-black text-gray-900 uppercase tracking-widest">Intelligence Summary</h2>
                 </div>
-                <button className="p-1.5 hover:bg-gray-100 rounded-lg transition-colors text-gray-300 hover:text-gray-600">
-                  <MoreHorizontal size={18} />
+                <button className="p-2 hover:bg-gray-100 rounded-lg transition-colors text-gray-300 hover:text-gray-600">
+                  <MoreHorizontal size={24} />
                 </button>
               </div>
               <div className="p-8">
                 {contact.rollingSummary ? (
-                  <p className="text-gray-600 leading-relaxed text-base font-medium">
+                  <p className="text-gray-700 leading-relaxed text-lg font-medium">
                     {contact.rollingSummary}
                   </p>
                 ) : (
-                  <div className="py-10 text-center space-y-3 opacity-40">
-                    <Bot size={32} className="mx-auto text-gray-300" />
-                    <p className="text-xs font-black uppercase tracking-widest">Waiting for insights</p>
+                  <div className="py-12 text-center space-y-4 opacity-40">
+                    <Bot size={40} className="mx-auto text-gray-300" />
+                    <p className="text-sm font-black uppercase tracking-widest">Waiting for insights</p>
                   </div>
                 )}
 
@@ -153,15 +154,15 @@ export default function ContactDetailPage() {
             {/* Recent Conversations */}
             <section className="sleek-card rounded-[40px]">
               <div className="px-8 py-6 border-b border-gray-50 flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  <div className="p-1.5 bg-blue-50 text-blue-600 rounded-lg border border-blue-100">
-                    <Zap size={14} />
+                <div className="flex items-center gap-4">
+                  <div className="p-2 bg-[#5551FF]/10 text-[#5551FF] rounded-xl border border-[#5551FF]/10">
+                    <Zap size={20} />
                   </div>
-                  <h2 className="text-xs font-black text-gray-900 uppercase tracking-widest">Active Deals</h2>
-                  <span className="px-1.5 py-0.5 bg-gray-50 border border-gray-100 text-gray-400 rounded-md text-[9px] font-black uppercase">{contact.dealContacts?.length || 0}</span>
+                  <h2 className="text-sm font-black text-gray-900 uppercase tracking-widest">Active Deals</h2>
+                  <span className="px-2 py-1 bg-gray-50 border border-gray-100 text-gray-400 rounded-md text-[10px] font-black uppercase">{contact.dealContacts?.length || 0}</span>
                 </div>
-                <button className="text-[10px] font-black text-blue-600 uppercase tracking-widest hover:text-blue-700 transition-colors flex items-center gap-1.5">
-                  <Plus size={14} />
+                <button className="text-[11px] font-black text-[#5551FF] uppercase tracking-widest hover:text-blue-700 transition-colors flex items-center gap-2">
+                  <Plus size={18} />
                   <span>Link Deal</span>
                 </button>
               </div>
@@ -263,13 +264,13 @@ export default function ContactDetailPage() {
 
 function ContactRow({ icon, label, value }: { icon: React.ReactNode, label: string, value: string | null }) {
   return (
-    <div className="flex items-center gap-4 p-3 bg-gray-50/50 rounded-2xl border border-transparent hover:border-gray-100 hover:bg-white transition-all group">
-      <div className="p-2 bg-white rounded-xl border border-gray-100 text-gray-400 group-hover:text-blue-600 transition-colors shadow-sm">
+    <div className="flex items-center gap-4 p-4 bg-gray-50/50 rounded-2xl border border-transparent hover:border-gray-100 hover:bg-white transition-all group">
+      <div className="p-2.5 bg-white rounded-xl border border-gray-100 text-gray-400 group-hover:text-[#5551FF] transition-colors shadow-sm">
         {icon}
       </div>
       <div className="min-w-0 flex-1">
-        <p className="text-[9px] font-black text-gray-400 uppercase tracking-widest">{label}</p>
-        <p className="text-xs font-bold text-gray-900 truncate tracking-tight">{value || 'Not listed'}</p>
+        <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-0.5">{label}</p>
+        <p className="text-sm font-bold text-gray-900 truncate tracking-tight">{value || 'Not listed'}</p>
       </div>
     </div>
   )

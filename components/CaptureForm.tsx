@@ -183,7 +183,7 @@ export default function CaptureForm() {
       onDrop={handleDrop}
     >
       {/* Mode Tabs */}
-      <div className="flex border-b border-gray-100">
+      <div className="flex border-b border-gray-100 bg-gray-50/50">
         {tabs.map((tab) => (
           <button
             key={tab.id}
@@ -192,14 +192,14 @@ export default function CaptureForm() {
               setMode(tab.id)
               clearError()
             }}
-            className={`flex-1 flex items-center justify-center gap-2 px-4 py-3 text-sm font-semibold transition-all ${
+            className={`flex-1 flex flex-col items-center justify-center gap-2 px-6 py-5 text-sm font-black uppercase tracking-widest transition-all ${
               mode === tab.id
-                ? 'text-blue-600 bg-blue-50/50 border-b-2 border-blue-600 -mb-px'
-                : 'text-gray-500 hover:text-gray-900 hover:bg-gray-50'
+                ? 'text-[#5551FF] bg-white border-b-2 border-[#5551FF] -mb-px shadow-[0_-4px_10px_rgba(85,81,255,0.05)]'
+                : 'text-gray-400 hover:text-gray-900 hover:bg-gray-50'
             }`}
           >
-            <tab.icon size={18} />
-            <span className="hidden sm:inline">{tab.label}</span>
+            <tab.icon size={24} className={mode === tab.id ? 'text-[#5551FF]' : 'text-gray-400'} />
+            <span className="">{tab.label}</span>
           </button>
         ))}
       </div>
@@ -236,12 +236,12 @@ export default function CaptureForm() {
             <button
               type="submit"
               disabled={loading || !rawText.trim()}
-              className="w-full sm:w-auto flex items-center justify-center gap-3 px-6 sm:px-8 py-3 rounded-xl sm:rounded-2xl bg-gray-900 text-white font-bold text-base hover:bg-gray-800 disabled:opacity-30 disabled:cursor-not-allowed transition-all shadow-md active:scale-95 order-1 sm:order-2"
+              className="w-full sm:w-auto flex items-center justify-center gap-4 px-10 py-4 rounded-2xl bg-gray-900 text-white font-black text-sm uppercase tracking-widest hover:bg-gray-800 disabled:opacity-30 disabled:cursor-not-allowed transition-all shadow-xl active:scale-95 order-1 sm:order-2"
             >
               {loading ? (
-                <Loader2 size={20} className="animate-spin sm:w-6 sm:h-6" />
+                <Loader2 size={24} className="animate-spin" />
               ) : (
-                <Send size={20} className="sm:w-6 sm:h-6" />
+                <Send size={24} />
               )}
               <span>{loading ? 'Processing...' : 'Submit to AI'}</span>
             </button>
@@ -260,49 +260,49 @@ export default function CaptureForm() {
             className="hidden"
           />
           
-          <div className="p-6 sm:p-8">
+          <div className="p-8 sm:p-10">
             {!file ? (
               <div
                 onClick={() => fileInputRef.current?.click()}
-                className={`border-2 border-dashed rounded-2xl p-8 sm:p-12 text-center cursor-pointer transition-all ${
+                className={`border-2 border-dashed rounded-[32px] p-12 sm:p-16 text-center cursor-pointer transition-all ${
                   isDragging
-                    ? 'border-blue-500 bg-blue-50'
-                    : 'border-gray-200 hover:border-gray-300 hover:bg-gray-50'
+                    ? 'border-[#5551FF] bg-[#5551FF]/5'
+                    : 'border-gray-200 hover:border-[#5551FF]/30 hover:bg-gray-50'
                 }`}
               >
-                <div className={`mx-auto w-14 h-14 rounded-2xl flex items-center justify-center mb-4 ${
-                  isDragging ? 'bg-blue-100 text-blue-600' : 'bg-gray-100 text-gray-400'
+                <div className={`mx-auto w-20 h-20 rounded-[28px] flex items-center justify-center mb-6 shadow-sm transition-all ${
+                  isDragging ? 'bg-[#5551FF] text-white' : 'bg-gray-100 text-gray-400'
                 }`}>
-                  <Upload size={28} />
+                  <Upload size={32} />
                 </div>
-                <p className="text-lg font-semibold text-gray-900 mb-1">
+                <p className="text-xl font-black text-gray-900 mb-2 uppercase tracking-tight">
                   {isDragging ? 'Drop file here' : 'Drop a file or click to upload'}
                 </p>
-                <p className="text-sm text-gray-500">
+                <p className="text-sm text-gray-500 font-bold uppercase tracking-widest">
                   Supports: {SUPPORTED_EXTENSIONS}
                 </p>
-                <p className="text-xs text-gray-400 mt-2">Maximum file size: 10MB</p>
+                <p className="text-xs text-gray-400 mt-4 font-bold uppercase tracking-[0.1em]">Maximum file size: 10MB</p>
               </div>
             ) : (
-              <div className="flex items-center gap-4 p-4 bg-green-50 border border-green-200 rounded-xl">
-                <div className="p-3 bg-green-100 rounded-xl text-green-600">
-                  <FileIcon size={24} />
+              <div className="flex items-center gap-6 p-6 bg-emerald-50 border border-emerald-100 rounded-[32px] shadow-sm">
+                <div className="p-4 bg-white rounded-2xl text-emerald-600 shadow-sm">
+                  <FileIcon size={32} />
                 </div>
                 <div className="flex-1 min-w-0">
-                  <p className="font-semibold text-gray-900 truncate">{file.name}</p>
-                  <p className="text-sm text-gray-500">{formatFileSize(file.size)}</p>
+                  <p className="text-lg font-black text-gray-900 truncate uppercase tracking-tight">{file.name}</p>
+                  <p className="text-xs font-bold text-emerald-600 uppercase tracking-widest">{formatFileSize(file.size)}</p>
                 </div>
-                <div className="flex items-center gap-2">
-                  <CheckCircle2 size={20} className="text-green-600" />
+                <div className="flex items-center gap-3">
+                  <CheckCircle2 size={24} className="text-emerald-600" />
                   <button
                     type="button"
                     onClick={() => {
                       setFile(null)
                       if (fileInputRef.current) fileInputRef.current.value = ''
                     }}
-                    className="p-2 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                    className="p-3 text-gray-400 hover:text-red-600 hover:bg-white rounded-xl transition-all shadow-sm border border-transparent hover:border-red-100"
                   >
-                    <X size={18} />
+                    <X size={20} />
                   </button>
                 </div>
               </div>
@@ -338,10 +338,10 @@ export default function CaptureForm() {
       {/* URL Input Mode */}
       {mode === 'url' && (
         <form onSubmit={handleUrlSubmit} className="relative">
-          <div className="p-6 sm:p-8">
-            <div className="relative">
-              <div className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400">
-                <Link2 size={20} />
+          <div className="p-8 sm:p-10">
+            <div className="relative group">
+              <div className="absolute left-5 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-[#5551FF] transition-colors">
+                <Link2 size={24} />
               </div>
               <input
                 type="url"
@@ -351,12 +351,12 @@ export default function CaptureForm() {
                   clearError()
                 }}
                 placeholder="https://example.com/meeting-notes or article URL..."
-                className="w-full pl-12 pr-4 py-4 bg-gray-50 border border-gray-200 rounded-xl text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-base"
+                className="w-full pl-16 pr-6 py-6 bg-gray-50/50 border-none rounded-[28px] text-gray-900 placeholder-gray-400 outline-none focus:ring-2 focus:ring-[#5551FF]/10 focus:bg-white transition-all text-lg font-bold shadow-inner"
                 disabled={loading}
               />
             </div>
-            <p className="text-sm text-gray-500 mt-3">
-              Paste a URL to fetch and parse its content. Works best with articles, documentation, and text-based pages.
+            <p className="text-sm text-gray-400 mt-4 font-bold uppercase tracking-widest px-2">
+              Paste a URL to fetch and parse its content. Works best with articles and documentation.
             </p>
           </div>
           

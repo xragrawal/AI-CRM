@@ -134,14 +134,22 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
     return (
       <Link
         href={href}
-        className={`flex items-center justify-center w-12 h-12 rounded-2xl transition-all duration-200 group ${
+        className={`flex flex-col items-center justify-center w-20 py-3 transition-all duration-200 group ${
+          isActive 
+            ? 'text-[#5551FF]' 
+            : 'text-gray-400 hover:text-[#5551FF]'
+        }`}
+      >
+        <div className={`w-12 h-12 flex items-center justify-center rounded-2xl mb-1.5 transition-all duration-200 ${
           isActive 
             ? 'bg-[#5551FF] text-white shadow-lg shadow-[#5551FF]/20' 
-            : 'text-gray-400 hover:text-[#5551FF] hover:bg-white'
-        }`}
-        title={label}
-      >
-        <Icon size={20} />
+            : 'group-hover:bg-white'
+        }`}>
+          <Icon size={24} />
+        </div>
+        <span className={`text-[10px] font-black uppercase tracking-widest ${isActive ? 'opacity-100' : 'opacity-60 group-hover:opacity-100'}`}>
+          {label}
+        </span>
       </Link>
     )
   }
@@ -159,40 +167,25 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
             onClick={() => setIsSearchOpen(false)}
           />
           <div className="relative w-full max-w-3xl bg-[#111111] rounded-[32px] shadow-[0_0_50px_rgba(0,0,0,0.5)] border border-white/10 overflow-hidden animate-in zoom-in-95 duration-200 flex flex-col max-h-[80vh]">
-            {/* Header / Input Area */}
-            <div className="flex flex-col border-b border-white/5 bg-black/20">
-              <form onSubmit={handleSearch} className="flex items-center px-8 py-6">
-                <Search className="text-[#5551FF] shrink-0" size={24} />
-                <input 
-                  ref={searchInputRef}
-                  type="text"
-                  placeholder="Search deals, contacts, or ask to capture info..."
-                  className="flex-1 bg-transparent border-none outline-none px-6 text-xl font-bold text-white placeholder:text-gray-600"
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  disabled={loading}
-                />
-                <div className="flex items-center gap-3">
-                  {loading ? (
-                    <Loader2 size={20} className="text-[#5551FF] animate-spin" />
-                  ) : (
-                    <div className="flex items-center gap-2">
-                      <span className="px-2 py-1 bg-white/5 text-[10px] font-black text-gray-500 rounded-md border border-white/10 uppercase tracking-widest">ESC</span>
-                    </div>
-                  )}
-                  <button 
-                    type="button"
-                    onClick={() => setIsSearchOpen(false)}
-                    className="p-2 text-gray-500 hover:text-white transition-colors"
-                  >
-                    <X size={24} />
-                  </button>
+            {/* Header */}
+            <div className="flex items-center justify-between px-8 py-6 border-b border-white/5 bg-black/20 shrink-0">
+              <div className="flex items-center gap-3">
+                <div className="w-8 h-8 rounded-xl bg-[#5551FF] text-white flex items-center justify-center shadow-lg">
+                  <Bot size={18} />
                 </div>
-              </form>
+                <span className="text-sm font-black text-white uppercase tracking-widest">Command Center</span>
+              </div>
+              <button 
+                type="button"
+                onClick={() => setIsSearchOpen(false)}
+                className="p-2 text-gray-500 hover:text-white transition-colors"
+              >
+                <X size={24} />
+              </button>
             </div>
             
-            {/* Content Area */}
-            <div className="flex-1 overflow-y-auto p-8 space-y-8 scrollbar-hide min-h-[300px]">
+            {/* Messages Area - Scrollable */}
+            <div className="flex-1 overflow-y-auto p-8 space-y-8 scrollbar-hide">
               {messages.length === 0 ? (
                 <div className="space-y-10">
                   {/* Suggestions when empty */}
@@ -201,19 +194,19 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
                     <div className="grid grid-cols-2 gap-4">
                       <button 
                         onClick={() => setSearchQuery("Show me my active deals")}
-                        className="flex flex-col items-start p-6 bg-white/5 hover:bg-[#5551FF] group rounded-[28px] transition-all text-left border border-white/5"
+                        className="flex flex-col items-start p-8 bg-white/5 hover:bg-[#5551FF] group rounded-[32px] transition-all text-left border border-white/5 shadow-xl"
                       >
-                        <TrendingUp size={18} className="text-[#5551FF] group-hover:text-white mb-3" />
-                        <span className="text-sm font-black text-white uppercase tracking-tight">Pipeline Overview</span>
-                        <span className="text-[11px] text-gray-500 group-hover:text-white/80 mt-1">Get an overview of current deals</span>
+                        <TrendingUp size={24} className="text-[#5551FF] group-hover:text-white mb-4" />
+                        <span className="text-base font-black text-white uppercase tracking-tight">Pipeline Overview</span>
+                        <span className="text-xs text-gray-500 group-hover:text-white/80 mt-2 font-bold uppercase tracking-widest">Get an overview of current deals</span>
                       </button>
                       <button 
                         onClick={() => setSearchQuery("Capture new contact: John Doe from Tesla")}
-                        className="flex flex-col items-start p-6 bg-white/5 hover:bg-[#FF6B6B] group rounded-[28px] transition-all text-left border border-white/5"
+                        className="flex flex-col items-start p-8 bg-white/5 hover:bg-[#FF6B6B] group rounded-[32px] transition-all text-left border border-white/5 shadow-xl"
                       >
-                        <Users2 size={18} className="text-[#FF6B6B] group-hover:text-white mb-3" />
-                        <span className="text-sm font-black text-white uppercase tracking-tight">Smart Capture</span>
-                        <span className="text-[11px] text-gray-500 group-hover:text-white/80 mt-1">Add new records via natural language</span>
+                        <Users2 size={24} className="text-[#FF6B6B] group-hover:text-white mb-4" />
+                        <span className="text-base font-black text-white uppercase tracking-tight">Smart Capture</span>
+                        <span className="text-xs text-gray-500 group-hover:text-white/80 mt-2 font-bold uppercase tracking-widest">Add new records via natural language</span>
                       </button>
                     </div>
                   </div>
@@ -223,8 +216,8 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
                     <h3 className="px-4 text-[10px] font-black text-gray-500 uppercase tracking-[0.2em] mb-4">Recent Searches</h3>
                     <div className="space-y-2 px-2">
                       {['Quarterly Growth Analysis', 'Tesla Q4 Proposal', 'New York Network'].map((item) => (
-                        <div key={item} className="flex items-center gap-3 py-2 text-sm font-bold text-gray-400">
-                          <Clock size={14} />
+                        <div key={item} className="flex items-center gap-4 py-3 text-base font-bold text-gray-400 hover:text-white transition-colors cursor-pointer">
+                          <Clock size={18} />
                           <span>{item}</span>
                         </div>
                       ))}
@@ -235,24 +228,24 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
                 /* Chat Messages */
                 <div className="space-y-8">
                   {messages.map((msg, idx) => (
-                    <div key={idx} className={`flex flex-col ${msg.role === 'user' ? 'items-end' : 'items-start'} space-y-3`}>
-                      <div className={`flex items-center gap-3 px-1 ${msg.role === 'user' ? 'flex-row-reverse' : ''}`}>
-                        <div className={`w-6 h-6 rounded-lg flex items-center justify-center ${
-                          msg.role === 'assistant' ? 'bg-[#5551FF] text-white' : 'bg-white/10 text-white'
+                    <div key={idx} className={`flex flex-col ${msg.role === 'user' ? 'items-end' : 'items-start'} space-y-4`}>
+                      <div className={`flex items-center gap-4 px-1 ${msg.role === 'user' ? 'flex-row-reverse' : ''}`}>
+                        <div className={`w-8 h-8 rounded-xl flex items-center justify-center ${
+                          msg.role === 'assistant' ? 'bg-[#5551FF] text-white shadow-lg' : 'bg-white/10 text-white'
                         }`}>
-                          {msg.role === 'assistant' ? <Bot size={14} /> : <UserIcon size={14} />}
+                          {msg.role === 'assistant' ? <Bot size={18} /> : <UserIcon size={18} />}
                         </div>
-                        <span className="text-[10px] font-black text-gray-500 uppercase tracking-widest">
+                        <span className="text-[11px] font-black text-gray-500 uppercase tracking-[0.2em]">
                           {msg.role === 'assistant' ? 'Command Center' : 'Operator'}
                         </span>
                       </div>
-                      <div className={`max-w-[90%] rounded-[24px] px-6 py-4 text-sm leading-relaxed shadow-xl ${
+                      <div className={`max-w-[90%] rounded-[32px] px-8 py-6 text-base leading-relaxed shadow-2xl ${
                         msg.role === 'user' ? 'bg-[#5551FF] text-white font-bold' : 'bg-white/5 border border-white/10 text-white'
                       }`}>
                         <p className="whitespace-pre-wrap">{msg.content}</p>
                         {msg.intent && msg.intent !== 'chat' && (
-                          <div className="mt-4 pt-3 border-t border-white/5">
-                            <span className="px-2 py-0.5 rounded-full text-[9px] font-black uppercase tracking-widest bg-[#5551FF]/20 text-[#5551FF]">
+                          <div className="mt-6 pt-4 border-t border-white/5">
+                            <span className="px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest bg-[#5551FF]/20 text-[#5551FF] border border-[#5551FF]/20">
                               {msg.intent} action triggered
                             </span>
                           </div>
@@ -274,40 +267,64 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
               )}
             </div>
 
-            {/* Footer / Controls */}
-            <div className="px-8 py-5 bg-black/40 border-t border-white/5 flex items-center justify-between">
-              <div className="flex items-center gap-6">
-                <div className="flex items-center gap-2">
-                  <span className="p-1 bg-white/5 rounded border border-white/10 text-[9px] font-bold text-gray-500 shadow-sm">Enter</span>
-                  <span className="text-[9px] text-gray-500 font-black uppercase tracking-widest">to ask</span>
+            {/* Input Area - Fixed at Bottom */}
+            <div className="px-8 py-6 bg-black/40 border-t border-white/5 shrink-0">
+              <form onSubmit={handleSearch} className="flex items-center gap-4">
+                <Search className="text-[#5551FF] shrink-0" size={24} />
+                <input 
+                  ref={searchInputRef}
+                  type="text"
+                  placeholder="Search deals, contacts, or ask to capture info..."
+                  className="flex-1 bg-transparent border-none outline-none text-base font-bold text-white placeholder:text-gray-600 focus:outline-none"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  disabled={loading}
+                />
+                <div className="flex items-center gap-3">
+                  {loading ? (
+                    <Loader2 size={20} className="text-[#5551FF] animate-spin" />
+                  ) : (
+                    <span className="px-2 py-1 bg-white/5 text-[10px] font-black text-gray-500 rounded-md border border-white/10 uppercase tracking-widest">ESC</span>
+                  )}
                 </div>
-                <div className="flex items-center gap-2">
-                  <span className="p-1 bg-white/5 rounded border border-white/10 text-[9px] font-bold text-gray-500 shadow-sm">⌘ K</span>
-                  <span className="text-[9px] text-gray-500 font-black uppercase tracking-widest">to open</span>
+              </form>
+              <div className="flex items-center justify-between mt-4 px-2">
+                <div className="flex items-center gap-6">
+                  <div className="flex items-center gap-2">
+                    <span className="px-2 py-1 bg-white/5 rounded-lg border border-white/10 text-[10px] font-black text-gray-500 shadow-sm uppercase">Enter</span>
+                    <span className="text-[10px] text-gray-500 font-black uppercase tracking-[0.2em]">to ask</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <span className="px-2 py-1 bg-white/5 rounded-lg border border-white/10 text-[10px] font-black text-gray-500 shadow-sm uppercase">ESC</span>
+                    <span className="text-[10px] text-gray-500 font-black uppercase tracking-[0.2em]">to close</span>
+                  </div>
                 </div>
-              </div>
-              <div className="flex items-center gap-2 text-[#5551FF]">
-                <Zap size={14} fill="currentColor" />
-                <span className="text-[10px] font-black uppercase tracking-[0.2em]">Intelligence Active</span>
+                <div className="flex items-center gap-2 text-[#5551FF]">
+                  <Zap size={14} fill="currentColor" />
+                  <span className="text-[10px] font-black uppercase tracking-[0.2em]">Intelligence Active</span>
+                </div>
               </div>
             </div>
           </div>
         </div>
       )}
 
-      {/* Sidebar - Compact Vertical Style */}
-      <aside className="w-20 bg-[#F8F9FB] border-r border-gray-100 flex flex-col items-center py-8 gap-8 z-50 shrink-0">
-        <div className="w-10 h-10 flex items-center justify-center text-[#5551FF]">
-          <Zap size={24} fill="currentColor" />
+      {/* Sidebar - Enhanced Vertical Style */}
+      <aside className="w-24 bg-[#F8F9FB] border-r border-gray-100 flex flex-col items-center py-8 gap-10 z-50 shrink-0">
+        <div className="w-12 h-12 flex items-center justify-center text-[#5551FF]">
+          <Zap size={32} fill="currentColor" />
         </div>
         
-        <nav className="flex-1 flex flex-col gap-4">
+        <nav className="flex-1 flex flex-col gap-2">
           {mainLinks.map((link) => <NavLink key={link.href} {...link} />)}
         </nav>
 
-        <div className="flex flex-col gap-4 mb-4">
-          <button className="w-12 h-12 flex items-center justify-center text-gray-400 hover:text-gray-600 transition-colors">
-            <LogOut size={20} />
+        <div className="flex flex-col items-center gap-2 mb-4">
+          <button className="flex flex-col items-center group text-gray-400 hover:text-[#5551FF] transition-all">
+            <div className="w-12 h-12 flex items-center justify-center rounded-2xl group-hover:bg-white transition-all">
+              <LogOut size={24} />
+            </div>
+            <span className="text-[9px] font-black uppercase tracking-widest opacity-60 group-hover:opacity-100">Exit</span>
           </button>
         </div>
       </aside>
@@ -319,27 +336,27 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
           <div className="flex-1 flex justify-center">
             <button 
               onClick={() => setIsSearchOpen(true)}
-              className="w-full max-w-xl flex items-center gap-4 px-6 py-3 bg-white hover:bg-gray-50 rounded-full text-sm font-medium shadow-[0_4px_20px_rgb(0,0,0,0.03)] border border-transparent hover:border-gray-100 transition-all text-gray-400 group"
+              className="w-full max-w-xl flex items-center gap-5 px-8 py-4 bg-white hover:bg-gray-50 rounded-[24px] text-base font-bold shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-transparent hover:border-[#5551FF]/20 transition-all text-gray-400 group"
             >
-              <Search size={18} className="text-gray-400 group-hover:text-[#5551FF] transition-colors" />
-              <span className="flex-1 text-left">Start searching here...</span>
-              <div className="flex items-center gap-1 px-2 py-0.5 bg-gray-50 rounded border border-gray-100">
-                <Command size={10} />
-                <span className="text-[10px] font-bold">K</span>
+              <Search size={22} className="text-gray-400 group-hover:text-[#5551FF] transition-colors" />
+              <span className="flex-1 text-left">Start searching or capture...</span>
+              <div className="flex items-center gap-2 px-3 py-1 bg-gray-50 rounded-xl border border-gray-100">
+                <Command size={14} />
+                <span className="text-xs font-black">K</span>
               </div>
             </button>
           </div>
 
-          <div className="absolute right-10 flex items-center gap-6">
-            <div className="flex items-center gap-4 px-4 py-2 bg-white rounded-full shadow-[0_4px_20px_rgb(0,0,0,0.03)]">
-              <button className="p-1 text-gray-400 hover:text-gray-600 transition-colors relative">
-                <Bell size={20} />
-                <span className="absolute -top-1 -right-1 w-4 h-4 bg-[#FF6B6B] text-[8px] font-black text-white flex items-center justify-center rounded-full border-2 border-white shadow-sm">12</span>
+          <div className="absolute right-10 flex items-center gap-8">
+            <div className="flex items-center gap-6 px-6 py-3 bg-white rounded-[24px] shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-gray-50">
+              <button className="p-1.5 text-gray-400 hover:text-[#5551FF] transition-colors relative">
+                <Bell size={24} />
+                <span className="absolute -top-1 -right-1 w-5 h-5 bg-[#FF6B6B] text-[10px] font-black text-white flex items-center justify-center rounded-full border-2 border-white shadow-sm">12</span>
               </button>
               <div className="text-right hidden sm:block">
-                <p className="text-[11px] font-bold text-gray-900 leading-none">{dateString}</p>
+                <p className="text-xs font-black text-gray-900 uppercase tracking-widest leading-none">{dateString}</p>
               </div>
-              <div className="w-8 h-8 rounded-full bg-blue-600 overflow-hidden border-2 border-white shadow-sm shrink-0 flex items-center justify-center text-[10px] font-black text-white">
+              <div className="w-10 h-10 rounded-xl bg-[#5551FF] overflow-hidden border-2 border-white shadow-lg shrink-0 flex items-center justify-center text-xs font-black text-white uppercase tracking-tighter">
                 AS
               </div>
             </div>

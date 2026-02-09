@@ -12,8 +12,8 @@ function isAliasMatch(aliases: unknown, q: string): boolean {
 }
 
 export async function GET(request: NextRequest) {
-  return Response.json(
-    await withCache(
+  try {
+    const payload = await withCache(
       request,
       async () => {
         const { searchParams } = new URL(request.url)
@@ -53,8 +53,7 @@ export async function GET(request: NextRequest) {
               if (isAliasMatch(d.aliases, q)) return true
               if (d.organization?.name.toLowerCase().includes(q)) return true
               const contactMatch = d.dealContacts.some(
-                (dc) =>
-                  dc.contact.displayName?.toLowerCase().includes(q)
+                (dc) => dc.contact.displayName?.toLowerCase().includes(q)
               )
               if (contactMatch) return true
               return false
@@ -63,10 +62,17 @@ export async function GET(request: NextRequest) {
 
         return { deals: filtered }
       },
-      // Use a shorter cache time if there's a search query
       new URL(request.url).searchParams.has('q') ? CACHE_TTL.SHORT : CACHE_TTL.MEDIUM
     )
-  )
+
+    return Response.json(payload)
+  } catch (error) {
+    console.error('[api/deals] GET failed:', error)
+    return Response.json(
+      { error: 'Failed to fetch deals' },
+      { status: 500 }
+    )
+  }
 }
 
 const VALID_STAGES = ['qualified', 'mou_signed', 'integration', 'won', 'lost_on_hold'] as const
@@ -98,14 +104,22 @@ export async function POST(request: NextRequest) {
     ? body.stage
     : 'qualified'
 
-  const deal = await prisma.deal.create({
-    data: {
-      name,
-      aliases,
-      organizationId,
-      stage,
-    },
-  })
+  try {
+    const deal = await prisma.deal.create({
+      data: {
+        name,
+        aliases,
+        organizationId,
+        stage,
+      },
+    })
 
-  return Response.json({ deal })
+    return Response.json({ deal })
+  } catch (error) {
+    console.error('[api/deals] POST failed:', error)
+    return Response.json(
+      { error: 'Failed to create deal' },
+      { status: 500 }
+    )
+  }
 }

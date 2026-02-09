@@ -43,29 +43,34 @@ export default function ContactsPage() {
   return (
     <div className="flex flex-col h-full space-y-6">
       <div className="flex items-center justify-between">
-        <div className="space-y-1">
-          <h2 className="text-2xl font-black text-gray-900 tracking-tight">People</h2>
-          <p className="text-xs font-medium text-gray-400 uppercase tracking-widest">Managing {filteredContacts.length} key contacts</p>
+        <div className="flex flex-col gap-1">
+          <div className="flex items-center gap-2">
+            <div className="p-1.5 bg-[#5551FF]/10 text-[#5551FF] rounded-lg">
+              <Users2 size={24} />
+            </div>
+            <h2 className="text-3xl font-black text-gray-900 tracking-tight">People</h2>
+          </div>
+          <p className="text-sm font-bold text-gray-400 uppercase tracking-widest">Managing {filteredContacts.length} key contacts</p>
         </div>
-        <button className="flex items-center gap-2 px-4 py-2.5 bg-gray-900 text-white rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-gray-800 transition-all shadow-md">
-          <Plus size={14} />
+        <button className="flex items-center gap-3 px-6 py-3 bg-gray-900 text-white rounded-2xl text-xs font-black uppercase tracking-widest hover:bg-gray-800 transition-all shadow-md">
+          <Plus size={18} />
           <span>New Contact</span>
         </button>
       </div>
 
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div className="relative group flex-1 max-w-md">
-          <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-300 group-focus-within:text-blue-500 transition-colors" size={16} />
+          <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-300 group-focus-within:text-[#5551FF] transition-colors" size={20} />
           <input 
             type="text"
             placeholder="Search people..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full pl-10 pr-4 py-2.5 bg-white border border-gray-100 rounded-xl text-xs font-medium focus:outline-none focus:ring-4 focus:ring-blue-500/5 focus:border-blue-500 transition-all shadow-sm"
+            className="w-full pl-12 pr-4 py-3 bg-white border border-gray-100 rounded-2xl text-sm font-bold focus:outline-none focus:ring-4 focus:ring-[#5551FF]/5 focus:border-[#5551FF] transition-all shadow-sm"
           />
         </div>
-        <button className="flex items-center gap-2 px-4 py-2.5 bg-white border border-gray-100 rounded-xl text-[10px] font-black text-gray-500 uppercase tracking-widest hover:border-gray-200 transition-all shadow-sm">
-          <Filter size={14} />
+        <button className="flex items-center gap-3 px-5 py-3 bg-white border border-gray-100 rounded-2xl text-[11px] font-black text-gray-500 uppercase tracking-widest hover:border-gray-200 transition-all shadow-sm">
+          <Filter size={18} />
           <span>Filter</span>
         </button>
       </div>
@@ -107,24 +112,24 @@ export default function ContactsPage() {
                         </Link>
                       </td>
                       <td className="px-6 py-5">
-                        <div className="flex items-center gap-2">
-                          <div className="w-6 h-6 rounded bg-gray-100 flex items-center justify-center text-gray-400">
-                            <Building2 size={12} />
+                        <div className="flex items-center gap-2.5">
+                          <div className="w-7 h-7 rounded bg-gray-100 flex items-center justify-center text-[#5551FF]/60 border border-gray-200/50">
+                            <Building2 size={14} />
                           </div>
-                          <span className="text-xs font-semibold text-gray-600">{contact.organization?.name || '-'}</span>
+                          <span className="text-xs font-bold text-gray-700">{contact.organization?.name || '-'}</span>
                         </div>
                       </td>
                       <td className="px-6 py-5">
-                        <div className="flex flex-col gap-1">
+                        <div className="flex flex-col gap-1.5">
                           {contact.email && (
-                            <div className="flex items-center gap-1.5 text-[10px] text-gray-500 font-medium">
-                              <Mail size={10} className="text-gray-300" />
+                            <div className="flex items-center gap-2 text-xs text-gray-500 font-bold">
+                              <Mail size={12} className="text-gray-300" />
                               <span className="truncate max-w-[150px]">{contact.email}</span>
                             </div>
                           )}
                           {contact.telegramHandle && (
-                            <div className="flex items-center gap-1.5 text-[10px] text-gray-500 font-medium">
-                              <Telegram size={10} className="text-gray-300" />
+                            <div className="flex items-center gap-2 text-xs text-gray-500 font-bold">
+                              <Telegram size={12} className="text-gray-300" />
                               <span>@{contact.telegramHandle}</span>
                             </div>
                           )}
