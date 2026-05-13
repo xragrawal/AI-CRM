@@ -4,7 +4,7 @@ import { buildProductTagContext, getRelevantClassificationContext } from './lear
 
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY ?? '')
 
-const GEMINI_MODEL = process.env.GEMINI_MODEL ?? 'gemini-2.0-flash'
+const GEMINI_MODEL = process.env.GEMINI_MODEL ?? 'gemini-2.5-flash'
 
 export const gemini = genAI.getGenerativeModel({ model: GEMINI_MODEL })
 export const geminiJson = genAI.getGenerativeModel({

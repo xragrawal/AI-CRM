@@ -103,12 +103,10 @@ export default function ItemReviewPage() {
               </div>
               <div className="p-8 overflow-y-auto flex-1 scrollbar-hide">
                 <div className="space-y-8">
-                  <div className="flex justify-start">
-                    <div className="max-w-[95%]">
-                      <div className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-3 ml-2">Operator</div>
-                      <div className="bg-[#111111] text-white rounded-[32px] px-8 py-6 shadow-2xl border border-white/5">
-                        <pre className="whitespace-pre-wrap font-bold text-base leading-relaxed">{item.rawText}</pre>
-                      </div>
+                  <div className="w-full">
+                    <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-3">Original text</p>
+                    <div className="bg-gray-50 border border-gray-100 rounded-2xl px-5 py-4">
+                      <p className="text-sm text-gray-700 font-medium leading-relaxed whitespace-pre-wrap">{item.rawText}</p>
                     </div>
                   </div>
 

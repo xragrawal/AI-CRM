@@ -58,7 +58,7 @@ export async function POST(req: NextRequest) {
       body = await req.json()
     }
 
-    const { message, history = [], provider = 'gemini' } = body
+    const { message, history = [], provider = (process.env.AI_PROVIDER ?? 'gemini') } = body
 
     if (!message?.trim()) {
       return NextResponse.json(

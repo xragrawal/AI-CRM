@@ -1,6 +1,6 @@
 import { NextRequest } from 'next/server'
 import { prisma } from '@/app/lib/prisma'
-import { answerRecallQuery } from '@/app/lib/gemini'
+import { answerRecallQuery } from '@/app/lib/ai'
 
 export async function POST(request: NextRequest) {
   let body: { query?: unknown }

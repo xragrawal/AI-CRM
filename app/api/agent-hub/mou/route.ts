@@ -1,6 +1,6 @@
 import { NextRequest } from 'next/server'
 import { prisma } from '@/app/lib/prisma'
-import { gemini } from '@/app/lib/gemini'
+import { generateText } from '@/app/lib/ai'
 
 export async function POST(request: NextRequest) {
   let body: any
@@ -10,7 +10,7 @@ export async function POST(request: NextRequest) {
     return Response.json({ error: 'Invalid JSON' }, { status: 400 })
   }
 
-  const { dealId, scope, duration, startDate, pricing, governingLaw, template } = body
+  const { dealId, scope, duration, startDate, pricing, governingLaw, template, partyBContacts } = body
   if (!dealId) return Response.json({ error: 'dealId is required' }, { status: 400 })
 
   let deal
@@ -33,9 +33,10 @@ export async function POST(request: NextRequest) {
   if (!deal) return Response.json({ error: 'Deal not found' }, { status: 404 })
 
   const partyB = deal.organization?.name ?? 'Partner Organization'
-  const contacts = deal.dealContacts.map(dc =>
+  const dbContacts = deal.dealContacts.map(dc =>
     `${dc.contact.displayName}${dc.role ? ` (${dc.role})` : ''}${dc.contact.email ? ` <${dc.contact.email}>` : ''}`
   ).join(', ')
+  const contacts = (typeof partyBContacts === 'string' && partyBContacts.trim()) ? partyBContacts.trim() : dbContacts
 
   let prompt: string
 
@@ -87,8 +88,7 @@ Keep each section concise and professional. Use plain text formatting with ALL C
   }
 
   try {
-    const result = await gemini.generateContent(prompt)
-    const mou = result.response.text()
+    const mou = await generateText(prompt)
     return Response.json({ mou })
   } catch (err: any) {
     console.error('Gemini MoU error:', err)

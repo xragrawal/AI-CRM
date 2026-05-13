@@ -60,6 +60,10 @@ async function callOpenAI(
   return data.choices[0]?.message?.content || ''
 }
 
+export async function generateText(prompt: string): Promise<string> {
+  return callOpenAI([{ role: 'user', content: prompt }])
+}
+
 function safeJsonParse<T>(text: string): T {
   try {
     return JSON.parse(text) as T

@@ -3,7 +3,7 @@ import { prisma } from '@/app/lib/prisma'
 import {
   extractProposalFromText,
   findCandidateDeals,
-} from '@/app/lib/gemini'
+} from '@/app/lib/ai'
 import { isTeamMember, isOwnCompany } from '@/app/lib/config'
 
 const DEALS_LIMIT = 200

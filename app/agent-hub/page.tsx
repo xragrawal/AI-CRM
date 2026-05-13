@@ -1,10 +1,11 @@
 'use client'
 
+import { useState } from 'react'
 import Link from 'next/link'
 import {
   Bot, FileText, DollarSign, TrendingUp, BarChart3,
   ArrowUpRight, Zap, Database, Upload, Users2, Building2,
-  MessageSquare, Brain, Layers
+  MessageSquare, Brain, Layers, ChevronDown
 } from 'lucide-react'
 
 const agents = [
@@ -104,6 +105,8 @@ const dataSources = [
 ]
 
 export default function AgentHubPage() {
+  const [howOpen, setHowOpen] = useState(false)
+
   return (
     <div className="h-full flex flex-col gap-6 py-4">
 
@@ -124,67 +127,77 @@ export default function AgentHubPage() {
         </p>
       </div>
 
-      {/* How agents work */}
-      <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-5">
-        <div className="flex items-center gap-2 mb-4">
-          <div className="p-1.5 bg-gray-900 rounded-lg">
-            <Layers size={13} className="text-white" />
-          </div>
-          <h2 className="text-[11px] font-black text-gray-900 uppercase tracking-widest">How Agents Work</h2>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-5">
-          {[
-            {
-              step: '01',
-              title: 'Read Live DB Data',
-              desc: 'Each agent queries your CRM — fetching the selected deal, its org, linked contacts, rolling summary, and decision history in real time.',
-              color: 'text-[#5551FF]',
-              bg: 'bg-[#5551FF]/5',
-            },
-            {
-              step: '02',
-              title: 'Merge with Collaterals',
-              desc: 'You can upload documents — an MoU template, a pricing deck structure, a brand brief — that the agent uses as the output scaffold.',
-              color: 'text-emerald-600',
-              bg: 'bg-emerald-50',
-            },
-            {
-              step: '03',
-              title: 'Generate & Export',
-              desc: 'Gemini fills in the structure with deal-specific data. Preview the result, copy to clipboard, or download as a file.',
-              color: 'text-amber-600',
-              bg: 'bg-amber-50',
-            },
-          ].map(({ step, title, desc, color, bg }) => (
-            <div key={step} className={`p-4 rounded-xl ${bg} border border-gray-100`}>
-              <span className={`text-[10px] font-black ${color} uppercase tracking-widest`}>{step}</span>
-              <p className="text-sm font-black text-gray-900 mt-1 mb-1.5">{title}</p>
-              <p className="text-[11px] text-gray-500 font-medium leading-relaxed">{desc}</p>
+      {/* How agents work — collapsible */}
+      <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
+        <button
+          type="button"
+          onClick={() => setHowOpen(o => !o)}
+          className="w-full flex items-center justify-between px-5 py-4 hover:bg-gray-50 transition-colors"
+        >
+          <div className="flex items-center gap-2">
+            <div className="p-1.5 bg-gray-900 rounded-lg">
+              <Layers size={13} className="text-white" />
             </div>
-          ))}
-        </div>
-
-        {/* Data sources grid */}
-        <div>
-          <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-3 flex items-center gap-2">
-            <Database size={11} />
-            Available Data Sources
-          </p>
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
-            {dataSources.map(({ icon: Icon, label, desc, color, bg }) => (
-              <div key={label} className="flex items-start gap-2.5 p-3 bg-gray-50 rounded-xl border border-gray-100">
-                <div className={`p-1.5 rounded-lg ${bg} shrink-0 mt-0.5`}>
-                  <Icon size={12} className={color} />
-                </div>
-                <div className="min-w-0">
-                  <p className="text-[10px] font-black text-gray-900 uppercase tracking-wide">{label}</p>
-                  <p className="text-[9px] text-gray-400 font-medium leading-relaxed mt-0.5">{desc}</p>
-                </div>
-              </div>
-            ))}
+            <h2 className="text-[11px] font-black text-gray-900 uppercase tracking-widest">How Agents Work</h2>
           </div>
-        </div>
+          <ChevronDown size={15} className={`text-gray-400 transition-transform duration-200 ${howOpen ? 'rotate-180' : ''}`} />
+        </button>
+
+        {howOpen && (
+          <div className="px-5 pb-5 border-t border-gray-50">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4 mb-5">
+              {[
+                {
+                  step: '01',
+                  title: 'Read Live DB Data',
+                  desc: 'Each agent queries your CRM — fetching the selected deal, its org, linked contacts, rolling summary, and decision history in real time.',
+                  color: 'text-[#5551FF]',
+                  bg: 'bg-[#5551FF]/5',
+                },
+                {
+                  step: '02',
+                  title: 'Merge with Collaterals',
+                  desc: 'You can upload documents — an MoU template, a pricing deck structure, a brand brief — that the agent uses as the output scaffold.',
+                  color: 'text-emerald-600',
+                  bg: 'bg-emerald-50',
+                },
+                {
+                  step: '03',
+                  title: 'Generate & Export',
+                  desc: 'Gemini fills in the structure with deal-specific data. Preview the result, copy to clipboard, or download as a file.',
+                  color: 'text-amber-600',
+                  bg: 'bg-amber-50',
+                },
+              ].map(({ step, title, desc, color, bg }) => (
+                <div key={step} className={`p-4 rounded-xl ${bg} border border-gray-100`}>
+                  <span className={`text-[10px] font-black ${color} uppercase tracking-widest`}>{step}</span>
+                  <p className="text-sm font-black text-gray-900 mt-1 mb-1.5">{title}</p>
+                  <p className="text-[11px] text-gray-500 font-medium leading-relaxed">{desc}</p>
+                </div>
+              ))}
+            </div>
+
+            <div>
+              <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-3 flex items-center gap-2">
+                <Database size={11} />
+                Available Data Sources
+              </p>
+              <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
+                {dataSources.map(({ icon: Icon, label, desc, color, bg }) => (
+                  <div key={label} className="flex items-start gap-2.5 p-3 bg-gray-50 rounded-xl border border-gray-100">
+                    <div className={`p-1.5 rounded-lg ${bg} shrink-0 mt-0.5`}>
+                      <Icon size={12} className={color} />
+                    </div>
+                    <div className="min-w-0">
+                      <p className="text-[10px] font-black text-gray-900 uppercase tracking-wide">{label}</p>
+                      <p className="text-[9px] text-gray-400 font-medium leading-relaxed mt-0.5">{desc}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Agent cards */}

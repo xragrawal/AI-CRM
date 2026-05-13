@@ -19,18 +19,26 @@ type InputMode = 'text' | 'file' | 'url'
 
 const SUPPORTED_EXTENSIONS = '.txt, .md, .csv, .json, .html, .xml'
 
-const SAMPLE_TEXT = `[10:02] rahul: ok so picking up from last week — compliance team signed off, we're good to move
-[10:03] sneha: finally lol. so timeline wise, Q3 go-live still on?
-[10:04] rahul: yeah Q3. pilot june 1. budget approved, 8k/month for the duration
-[10:05] sneha: cool. i'll need API docs by friday to start the integration review internally
-[10:06] rahul: will send by EOD thurs. also need your sandbox env before the kickoff
-[10:07] sneha: yeah sending that right after this call. btw MOU — has legal seen it?
-[10:08] rahul: routing to them today. targeting sign-off by may 23
-[10:09] sneha: ok. heads up — if it slips past 23rd our Q3 date is at risk
-[10:10] rahul: noted, i'll push. anything else blocking your side?
-[10:11] sneha: nope. let's lock the kickoff for week of may 26
-[10:12] rahul: done. i'll send the calendar invite. ccing alex too
-[10:13] sneha: perfect. talk then 👍`
+const SAMPLE_TEXT = `Meeting notes — Acme Corp integration pilot
+Date: May 13, 2026
+Attendees: Sneha Patel (Head of Partnerships, Acme Corp), Rahul (our side)
+
+Sneha confirmed compliance team has signed off and they're ready to proceed.
+Q3 go-live is confirmed. Pilot kicks off June 1. Budget approved at $8k/month for the duration.
+
+Sneha needs our API docs by Friday to start the internal integration review.
+We need their sandbox environment credentials before the kickoff call.
+
+MoU status: routing to our legal today, targeting sign-off by May 23.
+Sneha flagged that if MoU slips past May 23 the Q3 date is at risk.
+
+Next steps:
+- Send API docs to Sneha by EOD Thursday
+- Request sandbox env access from Acme Corp
+- Get MoU legal sign-off by May 23
+- Lock kickoff call for week of May 26 (cc: Alex from our side)
+
+Contact: sneha.patel@acmecorp.com`
 
 export default function CaptureForm() {
   const [mode, setMode] = useState<InputMode>('text')
