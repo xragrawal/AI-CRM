@@ -63,6 +63,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
   const [messages, setMessages] = useState<Message[]>([])
   const [loading, setLoading] = useState(false)
   const [aiProvider] = useState<'gemini' | 'openai'>('gemini')
+  const [dateString, setDateString] = useState<string>('')
   
   const searchInputRef = useRef<HTMLInputElement>(null)
   const messagesEndRef = useRef<HTMLDivElement>(null)
@@ -92,6 +93,11 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
       messagesEndRef.current.scrollIntoView({ behavior: 'smooth' })
     }
   }, [messages])
+
+  useEffect(() => {
+    const date = new Date()
+    setDateString(date.toLocaleDateString('en-US', { weekday: 'short', day: 'numeric', month: 'short' }))
+  }, [])
 
   async function handleSearch(e: React.FormEvent) {
     e.preventDefault()
@@ -160,8 +166,6 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
     { href: '/settings', label: 'Settings', icon: Settings },
   ]
 
-  const date = new Date()
-  const dateString = date.toLocaleDateString('en-US', { weekday: 'short', day: 'numeric', month: 'short' })
 
   return (
     <div className="flex h-screen bg-[#ECEFF3] font-sans antialiased text-gray-900 overflow-hidden">
@@ -360,7 +364,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
                 <span className="absolute -top-1 -right-1 w-5 h-5 bg-[#FF6B6B] text-[10px] font-black text-white flex items-center justify-center rounded-full border-2 border-white shadow-sm">12</span>
               </button>
               <div className="text-right hidden sm:block">
-                <p className="text-xs font-black text-gray-900 uppercase tracking-widest leading-none">{dateString}</p>
+                <p suppressHydrationWarning className="text-xs font-black text-gray-900 uppercase tracking-widest leading-none">{dateString}</p>
               </div>
               <div className="w-10 h-10 rounded-xl bg-[#5551FF] overflow-hidden border-2 border-white shadow-lg shrink-0 flex items-center justify-center text-xs font-black text-white uppercase tracking-tighter">
                 AS
