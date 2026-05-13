@@ -1,0 +1,213 @@
+MEMORANDUM OF UNDERSTANDING
+
+Between
+
+{{PARTY_A_NAME}}
+("Party A" / "Service Provider")
+
+and
+
+{{PARTY_B_NAME}}
+("Party B" / "Partner")
+
+Effective Date: {{START_DATE}}
+
+Deal Reference: {{DEAL_NAME}}
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+1. RECITALS
+
+{{RECITALS}}
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+2. PURPOSE
+
+{{PURPOSE}}
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+3. SCOPE OF COLLABORATION
+
+{{SCOPE_OF_WORK}}
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+4. DURATION
+
+This Memorandum of Understanding shall commence on {{START_DATE}} and shall
+remain in effect for a period of {{PILOT_DURATION}}, unless earlier terminated
+in accordance with Section 12 of this MoU or extended by mutual written
+agreement of the Parties.
+
+Upon expiry of the initial term, the Parties may negotiate in good faith to
+enter into a definitive commercial agreement reflecting the outcomes of the
+collaboration period.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+5. COMMERCIAL TERMS
+
+{{COMMERCIAL_TERMS}}
+
+The Parties acknowledge that the commercial terms set forth herein are
+indicative and applicable for the duration of the collaboration period defined
+in Section 4. A separate definitive agreement shall govern any commercial
+arrangement beyond such period.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+6. KEY REPRESENTATIVES
+
+The following individuals are designated as the primary points of contact and
+authorized representatives for each Party with respect to matters arising under
+this MoU:
+
+PARTY A — {{PARTY_A_NAME}}:
+{{PARTY_A_CONTACT}}
+
+PARTY B — {{PARTY_B_NAME}}:
+{{PARTY_B_CONTACTS}}
+
+Each Party shall promptly notify the other in writing of any change to its
+designated representative(s).
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+7. OBLIGATIONS OF PARTY A
+
+{{PARTY_A_OBLIGATIONS}}
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+8. OBLIGATIONS OF PARTY B
+
+{{PARTY_B_OBLIGATIONS}}
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+9. INTELLECTUAL PROPERTY
+
+9.1  Pre-Existing IP. Each Party retains all right, title, and interest in and
+     to its respective intellectual property, technology, know-how, and
+     proprietary information that existed prior to the Effective Date of this
+     MoU ("Pre-Existing IP"). Nothing in this MoU shall be construed as
+     transferring or licensing any Pre-Existing IP to the other Party, except
+     to the limited extent necessary to carry out the activities described
+     herein.
+
+9.2  Jointly Developed IP. Any intellectual property jointly developed by the
+     Parties in the course of the collaboration described in this MoU ("Joint
+     IP") shall be jointly owned by the Parties. The Parties agree to discuss
+     and agree in good faith, prior to the commencement of any joint
+     development activity, on the allocation of rights, responsibilities, and
+     commercialization arrangements with respect to any anticipated Joint IP.
+
+9.3  License Grant. Each Party hereby grants to the other a limited,
+     non-exclusive, non-transferable, royalty-free license to use its
+     Pre-Existing IP solely to the extent necessary to fulfill its obligations
+     under this MoU during the term hereof. Such license shall automatically
+     terminate upon the expiry or termination of this MoU.
+
+9.4  No Implied Rights. Except as expressly set forth in this Section 9, no
+     license or other right is granted by either Party to the other, whether
+     by implication, estoppel, or otherwise.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+10. CONFIDENTIALITY
+
+10.1 Definition. "Confidential Information" means any non-public information
+     disclosed by either Party (the "Disclosing Party") to the other (the
+     "Receiving Party") in connection with this MoU, whether disclosed orally,
+     in writing, electronically, or by any other means, and which is designated
+     as confidential or which reasonably should be understood to be confidential
+     given the nature of the information and the circumstances of disclosure.
+
+10.2 Obligations. The Receiving Party shall: (a) hold the Confidential
+     Information in strict confidence using at least the same degree of care
+     it uses to protect its own confidential information, but in no event less
+     than reasonable care; (b) not disclose the Confidential Information to
+     any third party without the prior written consent of the Disclosing Party;
+     and (c) use the Confidential Information solely for the purposes of
+     fulfilling its obligations under this MoU.
+
+10.3 Exceptions. The obligations under Section 10.2 shall not apply to
+     information that: (a) is or becomes publicly known through no breach of
+     this MoU; (b) was rightfully known by the Receiving Party prior to
+     disclosure; (c) is independently developed by the Receiving Party without
+     use of the Confidential Information; or (d) is required to be disclosed
+     by applicable law, regulation, or court order, provided that the Receiving
+     Party gives the Disclosing Party prompt prior written notice where legally
+     permissible.
+
+10.4 Survival. The confidentiality obligations set forth in this Section 10
+     shall survive the expiry or termination of this MoU for a period of three
+     (3) years.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+11. TERMINATION
+
+11.1 Termination for Convenience. Either Party may terminate this MoU at any
+     time upon not less than fifteen (15) days' prior written notice to the
+     other Party.
+
+11.2 Termination for Cause. Either Party may terminate this MoU immediately
+     upon written notice if the other Party: (a) materially breaches any
+     provision of this MoU and fails to cure such breach within ten (10)
+     business days after receiving written notice of the breach; or (b) becomes
+     insolvent, makes a general assignment for the benefit of creditors, or
+     has a receiver or administrator appointed over its assets.
+
+11.3 Effect of Termination. Upon expiry or termination of this MoU: (a) all
+     licenses granted hereunder shall immediately terminate; (b) each Party
+     shall promptly return or destroy all Confidential Information of the other
+     Party; and (c) any accrued payment obligations shall survive. Termination
+     shall not affect any rights or remedies that have accrued prior to the
+     date of termination.
+
+11.4 Non-Binding Nature. The Parties expressly acknowledge that this MoU is
+     a statement of intent and does not create any legally binding obligation
+     on either Party to enter into a definitive agreement, to continue the
+     collaboration beyond the term hereof, or to commit any specific level of
+     resources unless expressly stated otherwise herein.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+12. GOVERNING LAW & DISPUTE RESOLUTION
+
+{{GOVERNING_LAW_AND_DISPUTE}}
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+13. SIGNATURES
+
+This Memorandum of Understanding is entered into as of the Effective Date first
+written above. The duly authorized representatives of the Parties have executed
+this MoU as indicated below.
+
+FOR AND ON BEHALF OF {{PARTY_A_NAME}}:
+
+Signature: ___________________________
+
+Name:      ___________________________
+
+Title:     ___________________________
+
+Date:      ___________________________
+
+
+FOR AND ON BEHALF OF {{PARTY_B_NAME}}:
+
+Signature: ___________________________
+
+Name:      ___________________________
+
+Title:     ___________________________
+
+Date:      ___________________________
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+                              END OF DOCUMENT

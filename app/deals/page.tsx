@@ -31,6 +31,94 @@ function getStageInfo(stage: string) {
   return STAGE_CONFIG[stage as StageKey] || STAGE_CONFIG.qualified
 }
 
+interface KanbanColumnProps {
+  title: string
+  count: number
+  deals: any[]
+  stageKey: StageKey
+  draggedDealId: string | null
+  onDragStart: (dealId: string) => void
+  onDragEnd: () => void
+  onDrop: (dealId: string, stageKey: StageKey) => void
+  onAddDeal: (stageKey: StageKey) => void
+}
+
+function KanbanColumn({ title, count, deals, stageKey, draggedDealId, onDragStart, onDragEnd, onDrop, onAddDeal }: KanbanColumnProps) {
+  return (
+    <div
+      className="flex flex-col w-80 shrink-0 bg-gray-50/50 rounded-2xl p-4 border border-gray-100/50 transition-all"
+      onDragOver={(e) => e.preventDefault()}
+      onDrop={(e) => {
+        e.preventDefault()
+        const dealId = e.dataTransfer.getData('dealId')
+        if (dealId) onDrop(dealId, stageKey)
+      }}
+    >
+      <div className="flex items-center justify-between mb-5 px-1">
+        <div className="flex items-center gap-2">
+          <h3 className="text-xs font-black text-gray-900 uppercase tracking-widest">{title}</h3>
+          <span className="px-1.5 py-0.5 bg-white border border-gray-100 text-gray-400 rounded text-[9px] font-black">{count}</span>
+        </div>
+        <button
+          onClick={() => onAddDeal(stageKey)}
+          className="p-1 hover:bg-white rounded-md transition-colors text-gray-300 hover:text-gray-600"
+        >
+          <Plus size={14} />
+        </button>
+      </div>
+      <div className="space-y-3 overflow-y-auto pr-1 scrollbar-hide">
+        {deals.map((deal: any) => (
+          <div
+            key={deal.id}
+            draggable
+            onDragStart={(e) => {
+              e.dataTransfer.effectAllowed = 'move'
+              e.dataTransfer.setData('dealId', deal.id)
+              onDragStart(deal.id)
+            }}
+            onDragEnd={onDragEnd}
+            className={`transition-all ${draggedDealId === deal.id ? 'opacity-50' : 'opacity-100'}`}
+          >
+            <Link
+              href={`/deals/${deal.id}`}
+              className="block p-4 bg-white rounded-xl border border-gray-100 shadow-sm hover:shadow-md hover:border-blue-100 transition-all group cursor-grab active:cursor-grabbing"
+            >
+              <div className="flex justify-between items-start mb-2">
+                <span className="text-[9px] font-black text-blue-600 uppercase tracking-tighter bg-blue-50 px-1.5 py-0.5 rounded border border-blue-100/50">
+                  {deal.organization?.name || 'Direct'}
+                </span>
+                <ArrowUpRight size={12} className="text-gray-200 group-hover:text-blue-400 transition-colors" />
+              </div>
+              <h4 className="font-bold text-gray-900 text-xs mb-3 group-hover:text-blue-600 transition-colors line-clamp-2">{deal.name}</h4>
+              <div className="flex items-center justify-between mt-4">
+                <div className="flex flex-col gap-1">
+                  {(deal.dealContacts || []).slice(0, 2).map((dc: any) => (
+                    <div key={dc.contact.id} className="flex items-center gap-1.5">
+                      <div className="w-6 h-6 rounded-full bg-blue-100 border border-blue-200 flex items-center justify-center text-[9px] font-black text-blue-600 shadow-sm flex-shrink-0">
+                        {dc.contact.displayName[0]}
+                      </div>
+                      <span className="text-[10px] font-bold text-gray-700 truncate">{dc.contact.displayName}</span>
+                    </div>
+                  ))}
+                  {(deal.dealContacts || []).length > 2 && (
+                    <span className="text-[9px] text-gray-400 font-bold">+{(deal.dealContacts || []).length - 2} more</span>
+                  )}
+                </div>
+                <div className="flex items-center gap-1.5 text-gray-400">
+                  <Calendar size={14} />
+                  <span className="text-[10px] font-black uppercase tracking-tight">
+                    {new Date(deal.updatedAt).toLocaleDateString([], { month: 'short', day: 'numeric' })}
+                  </span>
+                </div>
+              </div>
+            </Link>
+          </div>
+        ))}
+      </div>
+    </div>
+  )
+}
+
 export default function DealsPage() {
   const router = useRouter()
   const [view, setView] = useState<'table' | 'kanban'>('table')
@@ -159,83 +247,6 @@ export default function DealsPage() {
     return matchesSearch && matchesStage
   })
 
-  const KanbanColumn = ({ title, count, deals, stageKey }: any) => (
-    <div 
-      className="flex flex-col w-80 shrink-0 bg-gray-50/50 rounded-2xl p-4 border border-gray-100/50 transition-all"
-      onDragOver={(e) => e.preventDefault()}
-      onDrop={(e) => {
-        e.preventDefault()
-        const dealId = e.dataTransfer.getData('dealId')
-        if (dealId) handleDragEnd(dealId, stageKey)
-      }}
-    >
-      <div className="flex items-center justify-between mb-5 px-1">
-        <div className="flex items-center gap-2">
-          <h3 className="text-xs font-black text-gray-900 uppercase tracking-widest">{title}</h3>
-          <span className="px-1.5 py-0.5 bg-white border border-gray-100 text-gray-400 rounded text-[9px] font-black">{count}</span>
-        </div>
-        <button 
-          onClick={() => openNewDeal(stageKey)}
-          className="p-1 hover:bg-white rounded-md transition-colors text-gray-300 hover:text-gray-600"
-        >
-          <Plus size={14} />
-        </button>
-      </div>
-      <div className="space-y-3 overflow-y-auto pr-1 scrollbar-hide">
-        {deals.map((deal: any) => (
-          <div
-            key={deal.id}
-            draggable
-            onDragStart={(e) => {
-              e.dataTransfer.effectAllowed = 'move'
-              e.dataTransfer.setData('dealId', deal.id)
-              setDraggedDealId(deal.id)
-            }}
-            onDragEnd={() => setDraggedDealId(null)}
-            className={`transition-all ${
-              draggedDealId === deal.id ? 'opacity-50' : 'opacity-100'
-            }`}
-          >
-            <Link 
-              href={`/deals/${deal.id}`}
-              className="block p-4 bg-white rounded-xl border border-gray-100 shadow-sm hover:shadow-md hover:border-blue-100 transition-all group cursor-grab active:cursor-grabbing"
-            >
-            <div className="flex justify-between items-start mb-2">
-              <span className="text-[9px] font-black text-blue-600 uppercase tracking-tighter bg-blue-50 px-1.5 py-0.5 rounded border border-blue-100/50">
-                {deal.organization?.name || 'Direct'}
-              </span>
-              <ArrowUpRight size={12} className="text-gray-200 group-hover:text-blue-400 transition-colors" />
-            </div>
-            <h4 className="font-bold text-gray-900 text-xs mb-3 group-hover:text-blue-600 transition-colors line-clamp-2">{deal.name}</h4>
-            
-            <div className="flex items-center justify-between mt-4">
-              <div className="flex flex-col gap-1">
-                {(deal.dealContacts || []).slice(0, 2).map((dc: any) => (
-                  <div key={dc.contact.id} className="flex items-center gap-1.5">
-                    <div className="w-6 h-6 rounded-full bg-blue-100 border border-blue-200 flex items-center justify-center text-[9px] font-black text-blue-600 shadow-sm flex-shrink-0">
-                      {dc.contact.displayName[0]}
-                    </div>
-                    <span className="text-[10px] font-bold text-gray-700 truncate">{dc.contact.displayName}</span>
-                  </div>
-                ))}
-                {(deal.dealContacts || []).length > 2 && (
-                  <span className="text-[9px] text-gray-400 font-bold">+{(deal.dealContacts || []).length - 2} more</span>
-                )}
-              </div>
-              <div className="flex items-center gap-1.5 text-gray-400">
-                <Calendar size={14} />
-                <span className="text-[10px] font-black uppercase tracking-tight">
-                  {new Date(deal.updatedAt).toLocaleDateString([], { month: 'short', day: 'numeric' })}
-                </span>
-              </div>
-            </div>
-            </Link>
-          </div>
-        ))}
-      </div>
-    </div>
-  )
-
   return (
     <div className="flex flex-col h-full space-y-6">
       <div className="flex items-center justify-between">
@@ -244,7 +255,7 @@ export default function DealsPage() {
             <div className="p-1.5 bg-[#5551FF]/10 text-[#5551FF] rounded-lg">
               <Zap size={20} />
             </div>
-            <h2 className="text-3xl font-black text-gray-900 tracking-tight">Deals Pipeline</h2>
+            <h2 className="text-2xl font-black text-gray-900 tracking-tight">Deals Pipeline</h2>
           </div>
           <p className="text-sm font-bold text-gray-400 uppercase tracking-widest">Managing {filteredDeals.length} active opportunities</p>
         </div>
@@ -407,36 +418,26 @@ export default function DealsPage() {
           </div>
         ) : (
           <div className="flex gap-6 overflow-x-auto pb-6 scrollbar-hide h-[calc(100vh-300px)] select-none">
-            <KanbanColumn 
-              title="Qualified" 
-              stageKey="qualified"
-              count={filteredDeals.filter(d => !d.stage || d.stage === 'qualified').length} 
-              deals={filteredDeals.filter(d => !d.stage || d.stage === 'qualified')} 
-            />
-            <KanbanColumn 
-              title="MOU Signed" 
-              stageKey="mou_signed"
-              count={filteredDeals.filter(d => d.stage === 'mou_signed').length} 
-              deals={filteredDeals.filter(d => d.stage === 'mou_signed')} 
-            />
-            <KanbanColumn 
-              title="Integration" 
-              stageKey="integration"
-              count={filteredDeals.filter(d => d.stage === 'integration').length} 
-              deals={filteredDeals.filter(d => d.stage === 'integration')} 
-            />
-            <KanbanColumn 
-              title="Won" 
-              stageKey="won"
-              count={filteredDeals.filter(d => d.stage === 'won').length} 
-              deals={filteredDeals.filter(d => d.stage === 'won')} 
-            />
-            <KanbanColumn 
-              title="On Hold" 
-              stageKey="lost_on_hold"
-              count={filteredDeals.filter(d => d.stage === 'lost_on_hold').length} 
-              deals={filteredDeals.filter(d => d.stage === 'lost_on_hold')} 
-            />
+            {([
+              { title: 'Qualified', stageKey: 'qualified' as StageKey, filter: (d: any) => !d.stage || d.stage === 'qualified' },
+              { title: 'MOU Signed', stageKey: 'mou_signed' as StageKey, filter: (d: any) => d.stage === 'mou_signed' },
+              { title: 'Integration', stageKey: 'integration' as StageKey, filter: (d: any) => d.stage === 'integration' },
+              { title: 'Won', stageKey: 'won' as StageKey, filter: (d: any) => d.stage === 'won' },
+              { title: 'On Hold', stageKey: 'lost_on_hold' as StageKey, filter: (d: any) => d.stage === 'lost_on_hold' },
+            ]).map(col => (
+              <KanbanColumn
+                key={col.stageKey}
+                title={col.title}
+                stageKey={col.stageKey}
+                count={filteredDeals.filter(col.filter).length}
+                deals={filteredDeals.filter(col.filter)}
+                draggedDealId={draggedDealId}
+                onDragStart={setDraggedDealId}
+                onDragEnd={() => setDraggedDealId(null)}
+                onDrop={handleDragEnd}
+                onAddDeal={openNewDeal}
+              />
+            ))}
           </div>
         )}
       </div>

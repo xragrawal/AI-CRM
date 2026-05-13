@@ -46,7 +46,7 @@ export default function OrganizationDetailPage() {
     return (
       <div className="p-8 text-center">
         <p className="text-gray-500 font-bold">Organization not found</p>
-        <Link href="/organizations" className="text-blue-600 hover:underline mt-4 inline-block font-bold">
+        <Link href="/companies" className="text-blue-600 hover:underline mt-4 inline-block font-bold">
           Back to companies
         </Link>
       </div>
@@ -59,7 +59,7 @@ export default function OrganizationDetailPage() {
     <div className="flex flex-col h-full space-y-8">
       <div className="space-y-2">
         <div className="flex items-center gap-3 text-xs font-black text-gray-400 uppercase tracking-widest">
-          <Link href="/organizations" className="p-2 hover:bg-white rounded-lg transition-all text-gray-400 shadow-sm border border-transparent hover:border-gray-100">
+          <Link href="/companies" className="p-2 hover:bg-white rounded-lg transition-all text-gray-400 shadow-sm border border-transparent hover:border-gray-100">
             <ArrowLeft size={18} />
           </Link>
           <span>Companies</span>
@@ -202,7 +202,7 @@ export default function OrganizationDetailPage() {
                   org.contacts.map((contact: any) => (
                     <Link 
                       key={contact.id} 
-                      href={`/contacts/${contact.id}`}
+                      href={`/people/${contact.id}`}
                       className="flex items-center gap-4 p-4 bg-gray-50/50 rounded-2xl border border-transparent hover:border-gray-100 hover:bg-white transition-all group"
                     >
                       <div className="p-2.5 bg-white rounded-xl border border-gray-100 text-gray-400 group-hover:text-[#5551FF] transition-colors shadow-sm">

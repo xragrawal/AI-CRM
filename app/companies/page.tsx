@@ -43,22 +43,18 @@ export default function OrganizationsPage() {
         <div className="flex flex-col gap-1">
           <div className="flex items-center gap-2">
             <div className="p-1.5 bg-[#5551FF]/10 text-[#5551FF] rounded-lg">
-              <Building2 size={24} />
+              <Building2 size={20} />
             </div>
-            <h2 className="text-3xl font-black text-gray-900 tracking-tight">Companies</h2>
+            <h2 className="text-2xl font-black text-gray-900 tracking-tight">Companies</h2>
           </div>
           <p className="text-sm font-bold text-gray-400 uppercase tracking-widest">Managing {filteredOrgs.length} partner organizations</p>
         </div>
-        <button className="flex items-center gap-3 px-6 py-3 bg-gray-900 text-white rounded-2xl text-xs font-black uppercase tracking-widest hover:bg-gray-800 transition-all shadow-md">
-          <Plus size={18} />
-          <span>New Company</span>
-        </button>
       </div>
 
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div className="relative group flex-1 max-w-md">
           <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-300 group-focus-within:text-[#5551FF] transition-colors" size={20} />
-          <input 
+          <input
             type="text"
             placeholder="Search companies..."
             value={searchQuery}
@@ -66,10 +62,16 @@ export default function OrganizationsPage() {
             className="w-full pl-12 pr-4 py-3 bg-white border border-gray-100 rounded-2xl text-sm font-bold focus:outline-none focus:ring-4 focus:ring-[#5551FF]/5 focus:border-[#5551FF] transition-all shadow-sm"
           />
         </div>
-        <button className="flex items-center gap-3 px-5 py-3 bg-white border border-gray-100 rounded-2xl text-[11px] font-black text-gray-500 uppercase tracking-widest hover:border-gray-200 transition-all shadow-sm">
-          <Filter size={18} />
-          <span>Filter</span>
-        </button>
+        <div className="flex items-center gap-3">
+          <button className="flex items-center gap-3 px-5 py-3 bg-white border border-gray-100 rounded-2xl text-[11px] font-black text-gray-500 uppercase tracking-widest hover:border-gray-200 transition-all shadow-sm">
+            <Filter size={18} />
+            <span>Filter</span>
+          </button>
+          <button className="flex items-center gap-3 px-6 py-3 bg-gray-900 text-white rounded-2xl text-[11px] font-black uppercase tracking-widest hover:bg-gray-800 transition-all shadow-md">
+            <Plus size={18} />
+            <span>New Company</span>
+          </button>
+        </div>
       </div>
 
       <div className="flex-1 overflow-hidden">
@@ -98,7 +100,7 @@ export default function OrganizationsPage() {
                   {filteredOrgs.map((org) => (
                     <tr key={org.id} className="group hover:bg-blue-50/30 transition-colors">
                       <td className="px-6 py-5">
-                        <Link href={`/organizations/${org.id}`} className="flex items-center gap-4">
+                        <Link href={`/companies/${org.id}`} className="flex items-center gap-4">
                           <div className="w-10 h-10 rounded-xl bg-gray-100 flex items-center justify-center text-[#5551FF]/60 group-hover:bg-white group-hover:shadow-sm transition-all border border-transparent group-hover:border-gray-100">
                             <Building2 size={20} />
                           </div>

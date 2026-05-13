@@ -1,3 +1,5 @@
+'use client'
+
 import { useEffect, useState } from 'react'
 import { 
   ArrowUpRight, 
@@ -56,6 +58,7 @@ const COLORS = ['#5551FF', '#E5E7EB']
 export default function DashboardSummary() {
   const [data, setData] = useState<DashboardData | null>(null)
   const [loading, setLoading] = useState(true)
+  const [fetchError, setFetchError] = useState<string | null>(null)
 
   useEffect(() => {
     async function fetchDashboard() {
@@ -64,9 +67,12 @@ export default function DashboardSummary() {
         if (res.ok) {
           const dashboardData = await res.json()
           setData(dashboardData)
+        } else {
+          setFetchError('Dashboard data unavailable')
         }
       } catch (error) {
         console.error('Failed to fetch dashboard:', error)
+        setFetchError('Network error loading dashboard')
       } finally {
         setLoading(false)
       }
@@ -83,6 +89,18 @@ export default function DashboardSummary() {
       </div>
     )
   }
+
+  if (fetchError) return (
+    <div className="flex-1 flex flex-col items-center justify-center gap-3 text-center">
+      <p className="text-sm font-bold text-red-500">{fetchError}</p>
+      <button
+        onClick={() => { setFetchError(null); setLoading(true); window.location.reload() }}
+        className="text-[10px] font-black uppercase tracking-widest text-[#5551FF] hover:underline"
+      >
+        Retry
+      </button>
+    </div>
+  )
 
   if (!data) return null
 
@@ -114,46 +132,41 @@ export default function DashboardSummary() {
   ]
 
   return (
-    <div className="space-y-10">
-      {/* Header Info */}
-      <div className="flex flex-col gap-2">
-        <div className="flex items-center gap-3">
-          <div className="flex -space-x-3">
-            {[1, 2, 3].map(i => (
-              <div key={i} className="w-8 h-8 rounded-full border-2 border-white bg-blue-100 flex items-center justify-center text-[10px] font-black text-blue-600 shadow-sm">
-                {String.fromCharCode(64 + i)}
-              </div>
-            ))}
+    <div className="flex-1 flex flex-col gap-3 min-h-0">
+      {/* Header */}
+      <div className="flex items-center justify-between shrink-0">
+        <div className="flex flex-col gap-0.5">
+          <div className="flex items-center gap-2">
+            <div className="flex -space-x-2">
+              {[1, 2, 3].map(i => (
+                <div key={i} className="w-6 h-6 rounded-full border-2 border-white bg-blue-100 flex items-center justify-center text-[8px] font-black text-blue-600 shadow-sm">
+                  {String.fromCharCode(64 + i)}
+                </div>
+              ))}
+            </div>
+            <span className="text-[10px] font-black text-[#5551FF] uppercase tracking-widest bg-[#5551FF]/5 px-2 py-0.5 rounded-lg border border-[#5551FF]/10">
+              AI Agent Active
+            </span>
           </div>
-          <span className="text-[12px] font-black text-[#5551FF] uppercase tracking-widest bg-[#5551FF]/5 px-3 py-1 rounded-lg border border-[#5551FF]/10">
-            AI Agent Active
-          </span>
+          <h2 className="text-2xl font-black text-gray-900 tracking-tight">
+            Command <span className="text-[#5551FF]">Center</span>
+          </h2>
         </div>
-        <h2 className="text-4xl font-black text-gray-900 tracking-tight">
-          Command <span className="text-[#5551FF]">Center</span>
-        </h2>
-        <p className="text-sm font-bold text-gray-500 uppercase tracking-widest">
-          Unified intelligence for your high-stakes relationships.
-        </p>
-      </div>
-
-      <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-black text-gray-900">Your Sales Analysis</h1>
-        <div className="flex items-center gap-4">
-          <button className="flex items-center gap-3 px-6 py-3 bg-[#5551FF] text-white rounded-2xl text-xs font-black uppercase tracking-widest shadow-lg shadow-[#5551FF]/20 hover:scale-[1.02] transition-all">
-            <Plus size={18} />
+        <div className="flex items-center gap-3">
+          <button className="flex items-center gap-2 px-4 py-2 bg-[#5551FF] text-white rounded-xl text-[10px] font-black uppercase tracking-widest shadow-md shadow-[#5551FF]/20 hover:scale-[1.02] transition-all">
+            <Plus size={14} />
             <span>Add Widget</span>
           </button>
-          <button className="flex items-center gap-3 px-6 py-3 bg-white text-gray-900 rounded-2xl text-xs font-black uppercase tracking-widest shadow-sm border border-gray-100 hover:border-gray-200 transition-all">
-            <Filter size={18} />
+          <button className="flex items-center gap-2 px-4 py-2 bg-white text-gray-900 rounded-xl text-[10px] font-black uppercase tracking-widest shadow-sm border border-gray-100 hover:border-gray-200 transition-all">
+            <Filter size={14} />
             <span>Filter</span>
           </button>
         </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div className="flex-1 min-h-0 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4" style={{ gridTemplateRows: '1fr 1fr' }}>
         {/* Deal Stage Distribution Card */}
-        <div className="lg:col-span-2 relative overflow-hidden rounded-[40px] bg-[#111111] h-[320px] group shadow-2xl">
+        <div className="lg:col-span-2 relative overflow-hidden rounded-2xl bg-[#111111] group shadow-xl min-h-0">
           <div className="absolute inset-0 opacity-40">
             <div className="absolute inset-0 bg-gradient-to-br from-blue-600/20 via-transparent to-transparent" />
             <div className="absolute bottom-0 left-0 w-full h-1/2 bg-gradient-to-t from-black to-transparent" />
@@ -162,11 +175,11 @@ export default function DashboardSummary() {
             </div>
           </div>
           
-          <div className="relative h-full flex flex-col p-8 sm:p-10">
-            <div className="mb-6">
-              <h2 className="text-2xl sm:text-3xl font-black text-white mb-2">Intelligence</h2>
-              <p className="text-gray-400 font-bold text-sm sm:text-base leading-relaxed whitespace-nowrap">
-                Pipeline distribution across {data.stats.deals} active deal stages.
+          <div className="relative h-full flex flex-col p-6">
+            <div className="mb-4 shrink-0">
+              <h2 className="text-lg font-black text-white mb-1">Intelligence</h2>
+              <p className="text-gray-400 font-bold text-xs leading-relaxed">
+                Pipeline across {data.stats.deals} active deal stages.
               </p>
             </div>
             
@@ -220,15 +233,15 @@ export default function DashboardSummary() {
         </div>
 
         {/* Total Sales Card - Weekly Velocity */}
-        <div className="lg:col-span-1 sleek-card h-[320px] p-8 flex flex-col">
-          <div className="flex items-center justify-between mb-6">
-            <div className="flex items-center gap-3">
-              <div className="p-2.5 bg-blue-50 text-[#5551FF] rounded-xl">
-                <TrendingUp size={20} />
+        <div className="lg:col-span-1 sleek-card p-5 flex flex-col min-h-0">
+          <div className="flex items-center justify-between mb-3 shrink-0">
+            <div className="flex items-center gap-2">
+              <div className="p-2 bg-blue-50 text-[#5551FF] rounded-lg">
+                <TrendingUp size={16} />
               </div>
-              <h3 className="text-xs font-black text-gray-900 uppercase tracking-widest">Velocity</h3>
+              <h3 className="text-[10px] font-black text-gray-900 uppercase tracking-widest">Velocity</h3>
             </div>
-            <button className="p-1 text-gray-300"><MoreVertical size={18} /></button>
+            <button className="p-1 text-gray-300"><MoreVertical size={14} /></button>
           </div>
           
           <div className="flex-1 min-h-0">
@@ -269,18 +282,18 @@ export default function DashboardSummary() {
         </div>
 
         {/* Engagement stats */}
-        <div className="lg:col-span-1 sleek-card h-[320px] p-8 flex flex-col">
-          <div className="flex items-center justify-between mb-6">
-            <div className="flex items-center gap-3">
-              <div className="p-2.5 bg-blue-50 text-[#5551FF] rounded-xl">
-                <Activity size={20} />
+        <div className="lg:col-span-1 sleek-card p-5 flex flex-col min-h-0">
+          <div className="flex items-center justify-between mb-3 shrink-0">
+            <div className="flex items-center gap-2">
+              <div className="p-2 bg-blue-50 text-[#5551FF] rounded-lg">
+                <Activity size={16} />
               </div>
-              <h3 className="text-xs font-black text-gray-900 uppercase tracking-widest">Activity</h3>
+              <h3 className="text-[10px] font-black text-gray-900 uppercase tracking-widest">Activity</h3>
             </div>
-            <button className="p-1 text-gray-300"><MoreVertical size={18} /></button>
+            <button className="p-1 text-gray-300"><MoreVertical size={14} /></button>
           </div>
 
-          <div className="flex gap-4 mb-6">
+          <div className="flex gap-4 mb-3 shrink-0">
             <div>
               <p className="text-xl font-black text-gray-900 leading-none">{data.stats.deals}</p>
               <span className="text-[9px] font-black text-gray-400 uppercase tracking-widest">Deals</span>
@@ -302,18 +315,18 @@ export default function DashboardSummary() {
         </div>
 
         {/* Recent Activity List - items from schema */}
-        <div className="lg:col-span-2 sleek-card p-8">
-          <div className="flex items-center justify-between mb-6">
-            <div className="flex items-center gap-3">
-              <div className="p-2.5 bg-blue-50 text-[#5551FF] rounded-xl">
-                <Clock size={20} />
+        <div className="lg:col-span-2 sleek-card p-5 flex flex-col min-h-0">
+          <div className="flex items-center justify-between mb-3 shrink-0">
+            <div className="flex items-center gap-2">
+              <div className="p-2 bg-blue-50 text-[#5551FF] rounded-lg">
+                <Clock size={16} />
               </div>
-              <h3 className="text-xs font-black text-gray-900 uppercase tracking-widest">Recent Activity</h3>
+              <h3 className="text-[10px] font-black text-gray-900 uppercase tracking-widest">Recent Activity</h3>
             </div>
-            <button className="text-xs font-black text-[#5551FF] hover:underline uppercase tracking-widest transition-colors">View All</button>
+            <button className="text-[10px] font-black text-[#5551FF] hover:underline uppercase tracking-widest transition-colors">View All</button>
           </div>
 
-          <div className="space-y-4">
+          <div className="space-y-3 flex-1 min-h-0 overflow-hidden">
             {data.recentActivity.length > 0 ? data.recentActivity.slice(0, 3).map((activity) => (
               <Link key={activity.id} href={`/items/${activity.id}`} className="flex items-center justify-between group">
                 <div className="flex items-center gap-4">
@@ -345,18 +358,18 @@ export default function DashboardSummary() {
         </div>
 
         {/* Growth Card - calculated win rate */}
-        <div className="lg:col-span-1 sleek-card p-8 flex flex-col items-center justify-center h-[280px]">
-          <div className="w-full flex items-center justify-between mb-4">
-            <div className="flex items-center gap-3">
-              <div className="p-2 bg-gray-50 text-gray-400 rounded-xl">
-                <TrendingUp size={16} />
+        <div className="lg:col-span-1 sleek-card p-5 flex flex-col min-h-0">
+          <div className="w-full flex items-center justify-between mb-3 shrink-0">
+            <div className="flex items-center gap-2">
+              <div className="p-2 bg-gray-50 text-gray-400 rounded-lg">
+                <TrendingUp size={14} />
               </div>
               <h3 className="text-[10px] font-black text-gray-900 uppercase tracking-widest">Win Rate</h3>
             </div>
             <button className="p-1 text-gray-300"><MoreVertical size={14} /></button>
           </div>
 
-          <div className="relative w-full h-40">
+          <div className="relative flex-1 min-h-0">
             <ResponsiveContainer width="100%" height="100%">
               <PieChart>
                 <Pie
@@ -383,11 +396,11 @@ export default function DashboardSummary() {
         </div>
 
         {/* Tag Distribution Card */}
-        <div className="lg:col-span-1 sleek-card p-8 flex flex-col h-[280px]">
-          <div className="w-full flex items-center justify-between mb-6">
-            <div className="flex items-center gap-3">
-              <div className="p-2 bg-gray-50 text-gray-400 rounded-xl">
-                <Filter size={16} />
+        <div className="lg:col-span-1 sleek-card p-5 flex flex-col min-h-0">
+          <div className="w-full flex items-center justify-between mb-3 shrink-0">
+            <div className="flex items-center gap-2">
+              <div className="p-2 bg-gray-50 text-gray-400 rounded-lg">
+                <Filter size={14} />
               </div>
               <h3 className="text-[10px] font-black text-gray-900 uppercase tracking-widest">Tags</h3>
             </div>

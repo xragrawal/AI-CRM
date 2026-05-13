@@ -96,7 +96,7 @@ export default function DealDetailPage() {
             <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-8">
               {deal.organization && (
                 <Link 
-                  href={`/organizations/${deal.organization.id}`}
+                  href={`/companies/${deal.organization.id}`}
                   className="flex items-center gap-2.5 text-sm font-bold text-gray-500 hover:text-[#5551FF] transition-colors"
                 >
                   <Building2 size={18} className="text-[#5551FF]/60" />
@@ -263,7 +263,7 @@ export default function DealDetailPage() {
                   deal.dealContacts.map((dc: any) => (
                     <Link 
                       key={dc.contact.id} 
-                      href={`/contacts/${dc.contact.id}`}
+                      href={`/people/${dc.contact.id}`}
                       className="flex items-center gap-3 p-3 bg-gray-50/50 rounded-2xl border border-transparent hover:border-blue-100 hover:bg-blue-50/30 transition-all group"
                     >
                       <div className="w-10 h-10 rounded-full bg-white flex items-center justify-center text-blue-600 font-black text-xs border border-gray-100 group-hover:scale-105 group-hover:border-blue-200 transition-all shadow-sm">

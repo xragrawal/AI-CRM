@@ -11,32 +11,36 @@ function isAliasMatch(aliases: unknown, q: string): boolean {
 }
 
 export async function GET(request: NextRequest) {
-  const { searchParams } = new URL(request.url)
-  const qRaw = searchParams.get('q') ?? ''
-  const q = qRaw.trim().toLowerCase()
+  try {
+    const { searchParams } = new URL(request.url)
+    const qRaw = searchParams.get('q') ?? ''
+    const q = qRaw.trim().toLowerCase()
 
-  const organizations = await prisma.organization.findMany({
-    orderBy: { updatedAt: 'desc' },
-    ...(q ? { take: SEARCH_LIMIT } : {}),
-    include: {
-      _count: {
-        select: {
-          deals: true,
-          contacts: true,
+    const organizations = await prisma.organization.findMany({
+      orderBy: { updatedAt: 'desc' },
+      ...(q ? { take: SEARCH_LIMIT } : {}),
+      include: {
+        _count: {
+          select: {
+            deals: true,
+            contacts: true,
+          },
         },
       },
-    },
-  })
+    })
 
-  const filtered = q
-    ? organizations.filter((org) => {
-        if (org.name.toLowerCase().includes(q)) return true
-        if (isAliasMatch(org.aliases, q)) return true
-        return false
-      })
-    : organizations
+    const filtered = q
+      ? organizations.filter((org) => {
+          if (org.name.toLowerCase().includes(q)) return true
+          if (isAliasMatch(org.aliases, q)) return true
+          return false
+        })
+      : organizations
 
-  return Response.json({ organizations: filtered })
+    return Response.json({ organizations: filtered })
+  } catch {
+    return Response.json({ error: 'Failed to fetch organizations' }, { status: 500 })
+  }
 }
 
 export async function POST(request: NextRequest) {

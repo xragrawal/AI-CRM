@@ -64,15 +64,18 @@ export async function POST(request: NextRequest) {
       ? body.organizationId.trim()
       : null
 
-  const contact = await prisma.contact.create({
-    data: {
-      displayName,
-      organizationId,
-      email: typeof body.email === 'string' ? body.email : null,
-      telegramHandle: typeof body.telegramHandle === 'string' ? body.telegramHandle : null,
-      aliases: [],
-    },
-  })
-
-  return Response.json({ contact })
+  try {
+    const contact = await prisma.contact.create({
+      data: {
+        displayName,
+        organizationId,
+        email: typeof body.email === 'string' ? body.email : null,
+        telegramHandle: typeof body.telegramHandle === 'string' ? body.telegramHandle : null,
+        aliases: [],
+      },
+    })
+    return Response.json({ contact })
+  } catch {
+    return Response.json({ error: 'Failed to create contact' }, { status: 500 })
+  }
 }

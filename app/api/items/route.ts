@@ -20,22 +20,26 @@ export async function POST(request: NextRequest) {
     )
   }
 
-  const item = await prisma.item.create({
-    data: {
-      rawText,
-      sourceType: 'paste',
-      status: 'proposed',
-      dealId: null,
-      reason: null,
-    },
-  })
+  try {
+    const item = await prisma.item.create({
+      data: {
+        rawText,
+        sourceType: 'paste',
+        status: 'proposed',
+        dealId: null,
+        reason: null,
+      },
+    })
 
-  return Response.json({
-    item: {
-      ...item,
-      createdAt: item.createdAt.toISOString(),
-    },
-  })
+    return Response.json({
+      item: {
+        ...item,
+        createdAt: item.createdAt.toISOString(),
+      },
+    })
+  } catch {
+    return Response.json({ error: 'Failed to save item' }, { status: 500 })
+  }
 }
 
 export async function GET(request: NextRequest) {
@@ -47,15 +51,19 @@ export async function GET(request: NextRequest) {
       ? statusParam
       : undefined
 
-  const items = await prisma.item.findMany({
-    orderBy: { createdAt: 'desc' },
-    where: status ? { status } : undefined,
-  })
+  try {
+    const items = await prisma.item.findMany({
+      orderBy: { createdAt: 'desc' },
+      where: status ? { status } : undefined,
+    })
 
-  return Response.json({
-    items: items.map((i) => ({
-      ...i,
-      createdAt: i.createdAt.toISOString(),
-    })),
-  })
+    return Response.json({
+      items: items.map((i) => ({
+        ...i,
+        createdAt: i.createdAt.toISOString(),
+      })),
+    })
+  } catch {
+    return Response.json({ error: 'Failed to fetch items' }, { status: 500 })
+  }
 }

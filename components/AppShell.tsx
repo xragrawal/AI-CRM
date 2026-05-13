@@ -30,6 +30,31 @@ interface Message {
   intent?: 'chat' | 'capture' | 'recall'
 }
 
+function NavLink({ href, label, icon: Icon, pathname }: { href: string; label: string; icon: React.ElementType; pathname: string }) {
+  const isActive = pathname === href
+  return (
+    <Link
+      href={href}
+      className={`flex flex-col items-center justify-center w-full py-2 transition-all duration-200 group ${
+        isActive
+          ? 'text-[#5551FF]'
+          : 'text-gray-400 hover:text-[#5551FF]'
+      }`}
+    >
+      <div className={`w-8 h-8 flex items-center justify-center rounded-xl mb-1 transition-all duration-200 ${
+        isActive
+          ? 'bg-[#5551FF] text-white shadow-md shadow-[#5551FF]/20'
+          : 'group-hover:bg-white'
+      }`}>
+        <Icon size={16} />
+      </div>
+      <span className={`text-[8px] font-black uppercase tracking-wider ${isActive ? 'opacity-100' : 'opacity-50 group-hover:opacity-100'}`}>
+        {label}
+      </span>
+    </Link>
+  )
+}
+
 export default function AppShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname()
   const router = useRouter()
@@ -113,6 +138,11 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
       }
     } catch (err: any) {
       console.error(err)
+      setMessages(prev => [...prev, {
+        role: 'assistant',
+        content: `Error: ${err?.message ?? 'Something went wrong. Please try again.'}`,
+        timestamp: new Date(),
+      }])
     } finally {
       setLoading(false)
     }
@@ -121,38 +151,14 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
   const mainLinks = [
     { href: '/', label: 'Dashboard', icon: LayoutDashboard },
     { href: '/deals', label: 'Deals', icon: Zap },
-    { href: '/organizations', label: 'Companies', icon: Building2 },
-    { href: '/contacts', label: 'People', icon: Users2 },
+    { href: '/companies', label: 'Companies', icon: Building2 },
+    { href: '/people', label: 'People', icon: Users2 },
     { href: '/inbox', label: 'Inbox', icon: Inbox },
     { href: '/analytics', label: 'Analytics', icon: Activity },
-    { href: '/assistant', label: 'Intelligence', icon: Sparkles },
+    { href: '/intelligence', label: 'Intelligence', icon: Sparkles },
+    { href: '/agent-hub', label: 'Agent Hub', icon: Bot },
     { href: '/settings', label: 'Settings', icon: Settings },
   ]
-
-  const NavLink = ({ href, label, icon: Icon }: any) => {
-    const isActive = pathname === href
-    return (
-      <Link
-        href={href}
-        className={`flex flex-col items-center justify-center w-20 py-3 transition-all duration-200 group ${
-          isActive 
-            ? 'text-[#5551FF]' 
-            : 'text-gray-400 hover:text-[#5551FF]'
-        }`}
-      >
-        <div className={`w-12 h-12 flex items-center justify-center rounded-2xl mb-1.5 transition-all duration-200 ${
-          isActive 
-            ? 'bg-[#5551FF] text-white shadow-lg shadow-[#5551FF]/20' 
-            : 'group-hover:bg-white'
-        }`}>
-          <Icon size={24} />
-        </div>
-        <span className={`text-[10px] font-black uppercase tracking-widest ${isActive ? 'opacity-100' : 'opacity-60 group-hover:opacity-100'}`}>
-          {label}
-        </span>
-      </Link>
-    )
-  }
 
   const date = new Date()
   const dateString = date.toLocaleDateString('en-US', { weekday: 'short', day: 'numeric', month: 'short' })
@@ -309,22 +315,22 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
         </div>
       )}
 
-      {/* Sidebar - Enhanced Vertical Style */}
-      <aside className="w-24 bg-[#F8F9FB] border-r border-gray-100 flex flex-col items-center py-8 gap-10 z-50 shrink-0">
-        <div className="w-12 h-12 flex items-center justify-center text-[#5551FF]">
-          <Zap size={32} fill="currentColor" />
+      {/* Sidebar */}
+      <aside className="w-16 bg-[#F8F9FB] border-r border-gray-100 flex flex-col items-center py-5 gap-6 z-50 shrink-0">
+        <div className="w-8 h-8 flex items-center justify-center text-[#5551FF]">
+          <Zap size={22} fill="currentColor" />
         </div>
-        
-        <nav className="flex-1 flex flex-col gap-2">
-          {mainLinks.map((link) => <NavLink key={link.href} {...link} />)}
+
+        <nav className="flex-1 flex flex-col gap-0.5 w-full px-1">
+          {mainLinks.map((link) => <NavLink key={link.href} {...link} pathname={pathname} />)}
         </nav>
 
-        <div className="flex flex-col items-center gap-2 mb-4">
-          <button className="flex flex-col items-center group text-gray-400 hover:text-[#5551FF] transition-all">
-            <div className="w-12 h-12 flex items-center justify-center rounded-2xl group-hover:bg-white transition-all">
-              <LogOut size={24} />
+        <div className="flex flex-col items-center gap-1 mb-2">
+          <button className="flex flex-col items-center group text-gray-400 hover:text-[#5551FF] transition-all py-1.5">
+            <div className="w-8 h-8 flex items-center justify-center rounded-xl group-hover:bg-white transition-all">
+              <LogOut size={16} />
             </div>
-            <span className="text-[9px] font-black uppercase tracking-widest opacity-60 group-hover:opacity-100">Exit</span>
+            <span className="text-[8px] font-black uppercase tracking-wider opacity-50 group-hover:opacity-100">Exit</span>
           </button>
         </div>
       </aside>
@@ -364,10 +370,15 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
         </header>
 
         {/* Dynamic Page Content */}
-        <main className="flex-1 overflow-y-auto px-10 pb-10 scroll-smooth">
-          <div className="max-w-[1600px] mx-auto h-full">
+        <main className="flex-1 overflow-y-auto px-8 pb-4 scroll-smooth flex flex-col">
+          <div className="max-w-[1600px] mx-auto flex-1 w-full">
             {children}
           </div>
+          <footer className="max-w-[1600px] mx-auto w-full pt-3 pb-2 border-t border-gray-100 mt-4">
+            <p className="text-[9px] font-bold text-gray-300 uppercase tracking-widest text-center">
+              © 2026 Ravi Agrawal · All Rights Reserved · Personal AI CRM
+            </p>
+          </footer>
         </main>
       </div>
     </div>

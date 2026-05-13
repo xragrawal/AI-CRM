@@ -112,24 +112,18 @@ export async function GET() {
     const totalCount = allDeals.length
     const growthRate = totalCount > 0 ? (wonCount / totalCount) * 100 : 0
 
-    // Get weekly deal velocity (last 7 days in order)
-    const velocityData = []
+    // Get weekly deal velocity (last 7 days) — parallel queries
     const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
-    for (let i = 6; i >= 0; i--) {
+    const dayWindows = Array.from({ length: 7 }, (_, idx) => {
       const d = new Date()
-      d.setDate(d.getDate() - i)
+      d.setDate(d.getDate() - (6 - idx))
       d.setHours(0, 0, 0, 0)
-      const dayName = days[d.getDay()]
-      const count = await prisma.deal.count({
-        where: {
-          createdAt: {
-            gte: d,
-            lt: new Date(d.getTime() + 24 * 60 * 60 * 1000)
-          }
-        }
-      })
-      velocityData.push({ name: dayName, value: count })
-    }
+      return { name: days[d.getDay()], gte: new Date(d), lt: new Date(d.getTime() + 86400000) }
+    })
+    const velocityCounts = await Promise.all(
+      dayWindows.map(w => prisma.deal.count({ where: { createdAt: { gte: w.gte, lt: w.lt } } }))
+    )
+    const velocityData = dayWindows.map((w, i) => ({ name: w.name, value: velocityCounts[i] }))
 
     return NextResponse.json({
       stats: {

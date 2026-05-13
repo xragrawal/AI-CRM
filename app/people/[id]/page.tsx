@@ -51,7 +51,7 @@ export default function ContactDetailPage() {
     return (
       <div className="p-8 text-center">
         <p className="text-gray-500 font-bold">Contact not found</p>
-        <Link href="/contacts" className="text-blue-600 hover:underline mt-4 inline-block font-bold">
+        <Link href="/people" className="text-blue-600 hover:underline mt-4 inline-block font-bold">
           Back to contacts
         </Link>
       </div>
@@ -64,7 +64,7 @@ export default function ContactDetailPage() {
     <div className="flex flex-col h-full space-y-8">
       <div className="space-y-2">
         <div className="flex items-center gap-3 text-xs font-black text-gray-400 uppercase tracking-widest">
-          <Link href="/contacts" className="p-2 hover:bg-white rounded-lg transition-all text-gray-400 shadow-sm border border-transparent hover:border-gray-100">
+          <Link href="/people" className="p-2 hover:bg-white rounded-lg transition-all text-gray-400 shadow-sm border border-transparent hover:border-gray-100">
             <ArrowLeft size={18} />
           </Link>
           <span>People</span>
@@ -81,7 +81,7 @@ export default function ContactDetailPage() {
               <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-8">
                 {contact.organization && (
                   <Link 
-                    href={`/organizations/${contact.organization.id}`}
+                    href={`/companies/${contact.organization.id}`}
                     className="flex items-center gap-2.5 text-sm font-bold text-gray-500 hover:text-[#5551FF] transition-colors"
                   >
                     <Building2 size={18} className="text-[#5551FF]/60" />
