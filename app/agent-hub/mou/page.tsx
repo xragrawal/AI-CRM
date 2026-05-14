@@ -364,7 +364,7 @@ export default function MouAgentPage() {
   )
 
   const MouOutput = () => mou ? (
-    <div className="flex-1 flex flex-col min-h-0 bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
+    <div className="h-full flex flex-col min-h-0 bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
       <div className="flex items-center justify-between px-5 py-3 border-b border-gray-50 shrink-0">
         <div className="flex items-center gap-2">
           <div className="p-1.5 bg-[#5551FF]/10 text-[#5551FF] rounded-lg"><FileText size={14} /></div>
@@ -398,14 +398,14 @@ export default function MouAgentPage() {
       </div>
     </div>
   ) : generating ? (
-    <div className="flex-1 flex flex-col items-center justify-center gap-3 bg-white rounded-2xl border border-gray-100">
+    <div className="h-full flex flex-col items-center justify-center gap-3 bg-white rounded-2xl border border-gray-100">
       <div className="p-3 bg-[#5551FF]/10 rounded-2xl">
         <Sparkles size={20} className="text-[#5551FF] animate-pulse" />
       </div>
       <p className="text-xs font-black text-gray-400 uppercase tracking-widest">Generating MoU draft...</p>
     </div>
   ) : (
-    <div className="flex-1 flex flex-col items-center justify-center gap-3 bg-white rounded-2xl border-2 border-dashed border-gray-100">
+    <div className="h-full flex flex-col items-center justify-center gap-3 bg-white rounded-2xl border-2 border-dashed border-gray-100">
       <div className="p-3 bg-gray-50 rounded-2xl"><FileText size={20} className="text-gray-300" /></div>
       <p className="text-xs font-black text-gray-400 uppercase tracking-widest">MoU preview will appear here</p>
     </div>
@@ -580,26 +580,32 @@ export default function MouAgentPage() {
 
   // ── SPLIT MODE ─────────────────────────────────────────────────────────────
   const SplitView = () => (
-    <div className="flex-1 min-h-0 grid grid-cols-2 gap-4">
-      <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-5 flex flex-col gap-3">
-        {DealSelector()}
-        {selectedDeal && PartyInfo()}
-        {selectedDeal && <SplitFormFields />}
-        {error && <p className="text-xs text-red-600 font-medium">{error}</p>}
-        {selectedDeal && (
-          <button onClick={generateMou} disabled={generating || !scope.trim()}
-            className="mt-auto w-full flex items-center justify-center gap-2 py-2.5 bg-[#5551FF] text-white rounded-xl text-[11px] font-black uppercase tracking-widest hover:bg-[#4440ee] disabled:opacity-30 transition-all shadow-md shadow-[#5551FF]/20">
+    <div className="flex-1 min-h-0 flex gap-4 overflow-hidden">
+      {/* Left panel — fixed width, scrolls independently, Generate button pinned at bottom */}
+      <div className="w-[360px] shrink-0 bg-white rounded-2xl border border-gray-100 shadow-sm flex flex-col min-h-0 overflow-hidden">
+        <div className="flex-1 min-h-0 overflow-y-auto p-5 flex flex-col gap-3">
+          {DealSelector()}
+          {selectedDeal && PartyInfo()}
+          {selectedDeal && <SplitFormFields />}
+          {error && <p className="text-xs text-red-600 font-medium">{error}</p>}
+        </div>
+        <div className="shrink-0 p-4 border-t border-gray-100 bg-white">
+          <button onClick={generateMou} disabled={!selectedDeal || generating || !scope.trim()}
+            className="w-full flex items-center justify-center gap-2 py-2.5 bg-[#5551FF] text-white rounded-xl text-[11px] font-black uppercase tracking-widest hover:bg-[#4440ee] disabled:opacity-30 transition-all shadow-md shadow-[#5551FF]/20">
             {generating ? <Loader2 size={14} className="animate-spin" /> : <Sparkles size={14} />}
             {generating ? 'Generating...' : 'Generate MoU'}
           </button>
-        )}
+        </div>
       </div>
-      {MouOutput()}
+      {/* Right panel — fills remaining width, scrolls internally */}
+      <div className="flex-1 min-h-0 flex flex-col overflow-hidden">
+        {MouOutput()}
+      </div>
     </div>
   )
 
   return (
-    <div className="h-full flex flex-col gap-4 py-4">
+    <div className="h-full min-h-0 flex flex-col gap-4 py-4">
       {/* Header */}
       <div className="flex items-center justify-between shrink-0">
         <div className="flex items-center gap-3">

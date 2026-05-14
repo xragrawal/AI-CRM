@@ -35,20 +35,20 @@ function NavLink({ href, label, icon: Icon, pathname }: { href: string; label: s
   return (
     <Link
       href={href}
-      className={`flex flex-col items-center justify-center w-full py-2 transition-all duration-200 group ${
+      className={`flex flex-col items-center justify-center w-full py-1.5 transition-all duration-200 group ${
         isActive
           ? 'text-[#5551FF]'
-          : 'text-gray-400 hover:text-[#5551FF]'
+          : 'text-gray-600 hover:text-[#5551FF]'
       }`}
     >
-      <div className={`w-8 h-8 flex items-center justify-center rounded-xl mb-1 transition-all duration-200 ${
+      <div className={`w-9 h-9 flex items-center justify-center rounded-xl mb-0.5 transition-all duration-200 ${
         isActive
           ? 'bg-[#5551FF] text-white shadow-md shadow-[#5551FF]/20'
           : 'group-hover:bg-white'
       }`}>
-        <Icon size={16} />
+        <Icon size={18} />
       </div>
-      <span className={`text-[8px] font-black uppercase tracking-wider ${isActive ? 'opacity-100' : 'opacity-50 group-hover:opacity-100'}`}>
+      <span className={`text-[10px] font-black uppercase tracking-wider ${isActive ? 'opacity-100' : 'opacity-85 group-hover:opacity-100'}`}>
         {label}
       </span>
     </Link>
@@ -320,9 +320,9 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
       )}
 
       {/* Sidebar */}
-      <aside className="w-16 bg-[#F8F9FB] border-r border-gray-100 flex flex-col items-center py-5 gap-6 z-50 shrink-0">
-        <div className="w-8 h-8 flex items-center justify-center text-[#5551FF]">
-          <Zap size={22} fill="currentColor" />
+      <aside className="w-24 bg-[#F8F9FB] border-r border-gray-100 flex flex-col items-center py-5 gap-6 z-50 shrink-0">
+        <div className="w-12 h-12 flex items-center justify-center text-[#5551FF]">
+          <Zap size={30} fill="currentColor" />
         </div>
 
         <nav className="flex-1 flex flex-col gap-0.5 w-full px-1">
@@ -330,11 +330,11 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
         </nav>
 
         <div className="flex flex-col items-center gap-1 mb-2">
-          <button className="flex flex-col items-center group text-gray-400 hover:text-[#5551FF] transition-all py-1.5">
-            <div className="w-8 h-8 flex items-center justify-center rounded-xl group-hover:bg-white transition-all">
-              <LogOut size={16} />
+          <button className="flex flex-col items-center group text-gray-600 hover:text-[#5551FF] transition-all py-1.5">
+            <div className="w-9 h-9 flex items-center justify-center rounded-xl group-hover:bg-white transition-all">
+              <LogOut size={18} />
             </div>
-            <span className="text-[8px] font-black uppercase tracking-wider opacity-50 group-hover:opacity-100">Exit</span>
+            <span className="text-[10px] font-black uppercase tracking-wider opacity-85 group-hover:opacity-100">Exit</span>
           </button>
         </div>
       </aside>
@@ -375,7 +375,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
 
         {/* Dynamic Page Content */}
         <main className="flex-1 overflow-y-auto px-8 pb-4 scroll-smooth flex flex-col">
-          <div className="max-w-[1600px] mx-auto flex-1 w-full">
+          <div className="max-w-[1600px] mx-auto flex-1 min-h-0 w-full">
             {children}
           </div>
           <footer className="max-w-[1600px] mx-auto w-full pt-3 pb-2 border-t border-gray-100 mt-4">
