@@ -2,7 +2,7 @@
 
 An AI-powered personal CRM that turns unstructured notes, emails, and meeting transcripts into structured deal, contact, and organization records — with human-in-the-loop review before anything is saved.
 
-https://github.com/xragrawal/AI-CRM/blob/main/demo/personal-crm-demo.mp4
+![Personal AI CRM Demo](./Demo/personal-crm-demo.webp)
 
 ---
 
